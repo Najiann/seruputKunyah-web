@@ -1,15 +1,14 @@
 import React from 'react';
-import { MessageCircle, Instagram, MapPin, Clock, Edit3 } from 'lucide-react';
+import { MessageCircle, Instagram, MapPin, Clock } from 'lucide-react';
 import { StoreConfig } from '../types';
 
 interface ContactSectionProps {
   storeConfig: StoreConfig;
-  onOpenConfig: () => void;
+  onOpenConfig?: () => void;
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({
   storeConfig,
-  onOpenConfig,
 }) => {
   return (
     <section id="kontak" className="py-16 sm:py-24 bg-[#FFFAF1] relative">
@@ -128,15 +127,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               </p>
             </div>
 
-            <div className="pt-4 mt-2">
-              <button
-                onClick={onOpenConfig}
-                type="button"
-                className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-[#F5E6C8]/60 hover:bg-[#F5E6C8] text-[#70412E] text-xs font-bold rounded-lg border border-[#E8D5B5] transition-colors"
-              >
-                <Edit3 className="w-3.5 h-3.5" />
-                <span>Sesuaikan Info Toko</span>
-              </button>
+            <div className="pt-4 mt-2 text-[11px] text-[#78804B] font-semibold">
+              *Pesanan diproses fresh setiap hari untuk menjaga kualitas rasa.
             </div>
           </div>
 

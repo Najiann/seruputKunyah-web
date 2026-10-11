@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { X, Trash2, Plus, Minus, ShoppingBag, Send, AlertCircle, ArrowLeft } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, Trash2, Plus, Minus, ShoppingBag, Send, AlertCircle, ArrowLeft, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { formatRupiah } from '../utils/currency';
 import { getWhatsAppOrderUrl } from '../utils/whatsapp';
@@ -20,9 +20,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ storeConfig, onOpenConfi
     clearCart,
     totalItems,
     totalPrice,
+    customerName,
+    setCustomerName,
     customerNote,
     setCustomerNote,
   } = useCart();
+
+  const [nameError, setNameError] = useState(false);
 
   // Close on Escape key
   useEffect(() => {
@@ -51,10 +55,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ storeConfig, onOpenConfi
 
   const handleCheckout = () => {
     if (items.length === 0) return;
+
+    if (!customerName || !customerName.trim()) {
+      setNameError(true);
+      const nameInput = document.getElementById('customer-order-name');
+      if (nameInput) {
+        nameInput.focus();
+      }
+      return;
+    }
+
+    setNameError(false);
     const checkoutUrl = getWhatsAppOrderUrl(
       storeConfig.whatsappNumber,
       items,
-      customerNote
+      customerNote,
+      customerName
     );
     // Open WhatsApp Click to Chat in new tab
     window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
@@ -231,23 +247,61 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ storeConfig, onOpenConfi
               </div>
             )}
 
-            {/* Customer Special Note Input */}
+            {/* Customer Name & Notes Input */}
             {items.length > 0 && (
-              <div className="pt-3 border-t border-[#E8D5B5]/60">
-                <label
-                  htmlFor="customer-order-note"
-                  className="block text-xs font-bold text-[#70412E] mb-1.5"
-                >
-                  Catatan Pesanan (Opsional):
-                </label>
-                <textarea
-                  id="customer-order-note"
-                  rows={2}
-                  value={customerNote}
-                  onChange={e => setCustomerNote(e.target.value)}
-                  placeholder="Contoh: Makaroni basah pedas level 2, es teh jangan terlalu manis, ambil di kantin kampus..."
-                  className="w-full text-xs p-2.5 rounded-xl border border-[#E8D5B5] bg-white focus:outline-none focus:ring-1 focus:ring-[#C58B55] text-[#70412E] placeholder:text-[#806B58]/50"
-                />
+              <div className="pt-3 border-t border-[#E8D5B5]/60 space-y-3">
+                {/* Input Nama Pemesan */}
+                <div>
+                  <label
+                    htmlFor="customer-order-name"
+                    className="block text-xs font-bold text-[#70412E] mb-1.5 flex items-center justify-between"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-[#C58B55]" />
+                      <span>Nama Pemesan / Atas Nama:</span>
+                    </span>
+                    <span className="text-[11px] font-bold text-[#78804B]">*Wajib diisi</span>
+                  </label>
+                  <input
+                    id="customer-order-name"
+                    type="text"
+                    value={customerName}
+                    onChange={e => {
+                      setCustomerName(e.target.value);
+                      if (nameError && e.target.value.trim()) setNameError(false);
+                    }}
+                    placeholder="Contoh: Jihan / Kak Dimas"
+                    className={`w-full text-xs p-2.5 rounded-xl border bg-white focus:outline-none transition-all text-[#70412E] placeholder:text-[#806B58]/50 ${
+                      nameError
+                        ? 'border-red-500 ring-2 ring-red-200'
+                        : 'border-[#E8D5B5] focus:ring-1 focus:ring-[#C58B55]'
+                    }`}
+                  />
+                  {nameError && (
+                    <p className="text-[11px] font-bold text-red-600 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3 shrink-0" />
+                      <span>Mohon isi nama pemesan sebelum mengirim pesanan ke WhatsApp.</span>
+                    </p>
+                  )}
+                </div>
+
+                {/* Catatan Tambahan */}
+                <div>
+                  <label
+                    htmlFor="customer-order-note"
+                    className="block text-xs font-bold text-[#70412E] mb-1.5"
+                  >
+                    Catatan Pesanan (Opsional):
+                  </label>
+                  <textarea
+                    id="customer-order-note"
+                    rows={2}
+                    value={customerNote}
+                    onChange={e => setCustomerNote(e.target.value)}
+                    placeholder="Contoh: Makaroni basah pedas level 2, es teh jangan terlalu manis, ambil di kantin kampus..."
+                    className="w-full text-xs p-2.5 rounded-xl border border-[#E8D5B5] bg-white focus:outline-none focus:ring-1 focus:ring-[#C58B55] text-[#70412E] placeholder:text-[#806B58]/50"
+                  />
+                </div>
               </div>
             )}
           </div>

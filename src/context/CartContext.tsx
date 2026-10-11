@@ -8,6 +8,8 @@ interface CartContextType {
   updateQuantity: (productId: string, delta: number) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
+  customerName: string;
+  setCustomerName: (name: string) => void;
   customerNote: string;
   setCustomerNote: (note: string) => void;
   isCartOpen: boolean;
@@ -23,6 +25,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'seruput_kunyah_cart_v1';
+const NAME_STORAGE_KEY = 'seruput_kunyah_customer_name';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>(() => {
@@ -49,6 +52,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     return [];
   });
+
+  const [customerName, setCustomerNameState] = useState<string>(() => {
+    try {
+      return localStorage.getItem(NAME_STORAGE_KEY) || '';
+    } catch {
+      return '';
+    }
+  });
+
+  const setCustomerName = (name: string) => {
+    setCustomerNameState(name);
+    try {
+      localStorage.setItem(NAME_STORAGE_KEY, name);
+    } catch {
+      // ignore
+    }
+  };
 
   const [customerNote, setCustomerNote] = useState<string>('');
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
@@ -133,6 +153,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateQuantity,
         removeFromCart,
         clearCart,
+        customerName,
+        setCustomerName,
         customerNote,
         setCustomerNote,
         isCartOpen,

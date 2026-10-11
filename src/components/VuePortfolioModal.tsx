@@ -166,13 +166,17 @@ export const PRODUCTS = [
     whatsapp: `// src/utils/whatsapp.js
 import { formatRupiah } from './currency';
 
-export function buildWhatsAppMessage(items, customerNote = '') {
+export function buildWhatsAppMessage(items, customerNote = '', customerName = '') {
   if (!items || items.length === 0) return '';
 
   const total = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   const lines = [];
   lines.push('Halo SERUPUT & KUNYAH! Saya ingin memesan:\\n');
+
+  if (customerName && customerName.trim()) {
+    lines.push(\`Nama Pemesan: \${customerName.trim()}\\n\`);
+  }
 
   items.forEach((item, index) => {
     const itemSubtotal = item.product.price * item.quantity;
@@ -197,9 +201,9 @@ export function buildWhatsAppMessage(items, customerNote = '') {
   return lines.join('\\n');
 }
 
-export function getWhatsAppOrderUrl(phoneNumber, items, customerNote = '') {
+export function getWhatsAppOrderUrl(phoneNumber, items, customerNote = '', customerName = '') {
   const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
-  const message = buildWhatsAppMessage(items, customerNote);
+  const message = buildWhatsAppMessage(items, customerNote, customerName);
   return \`https://wa.me/\${cleanNumber}?text=\${encodeURIComponent(message)}\`;
 }`,
 

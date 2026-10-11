@@ -93,14 +93,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderNow }) => {
                   height={450}
                 />
 
-                {/* Floating highlight badge */}
-                <div className="absolute bottom-3 left-3 bg-[#FFFAF1]/95 backdrop-blur-xs py-2 px-3 rounded-xl border border-[#E8D5B5] shadow-md flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#F5E6C8] flex items-center justify-center text-sm font-black text-[#70412E]">
-                    Rp4k
+                {/* Floating highlight badge - Spacious, elegant & cozy */}
+                <div className="absolute bottom-4 left-4 sm:bottom-5 sm:left-5 bg-[#FFFAF1]/95 backdrop-blur-md py-3 px-4 sm:px-5 rounded-2xl border-2 border-[#E8D5B5] shadow-lg flex items-center gap-3.5 transition-transform duration-300 hover:scale-105">
+                  <div className="px-3 py-2 rounded-xl bg-[#F5E6C8] border border-[#E8D5B5] flex flex-col items-center justify-center shrink-0">
+                    <span className="text-[10px] font-bold text-[#806B58] uppercase tracking-wider leading-none">Mulai</span>
+                    <span className="font-heading text-base sm:text-lg font-black text-[#70412E] leading-tight">Rp4.000</span>
                   </div>
-                  <div className="text-left">
-                    <p className="text-[11px] font-bold text-[#806B58] uppercase tracking-wider">Mulai dari</p>
-                    <p className="text-xs font-black text-[#70412E]">Es Teh & Makaroni Nikmat</p>
+                  <div className="text-left pr-1">
+                    <p className="text-xs sm:text-sm font-black text-[#70412E] leading-tight">
+                      Camilan &amp; Es Teh Segar
+                    </p>
+                    <p className="text-[11px] font-semibold text-[#78804B] mt-0.5">
+                      Porsi Pas, Teman Santai
+                    </p>
                   </div>
                 </div>
               </div>

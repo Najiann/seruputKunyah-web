@@ -20,7 +20,8 @@ import { formatRupiah } from './currency';
  */
 export function buildWhatsAppMessage(
   items: CartItem[],
-  customerNote: string = ''
+  customerNote: string = '',
+  customerName: string = ''
 ): string {
   if (!items || items.length === 0) {
     return '';
@@ -33,6 +34,10 @@ export function buildWhatsAppMessage(
 
   const lines: string[] = [];
   lines.push('Halo SERUPUT & KUNYAH! Saya ingin memesan:\n');
+
+  if (customerName && customerName.trim()) {
+    lines.push(`Nama Pemesan: ${customerName.trim()}\n`);
+  }
 
   items.forEach((item, index) => {
     const itemSubtotal = item.product.price * item.quantity;
@@ -65,11 +70,12 @@ export function buildWhatsAppMessage(
 export function getWhatsAppOrderUrl(
   phoneNumber: string,
   items: CartItem[],
-  customerNote: string = ''
+  customerNote: string = '',
+  customerName: string = ''
 ): string {
   // Clean phone number (remove +, -, spaces)
   const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
-  const message = buildWhatsAppMessage(items, customerNote);
+  const message = buildWhatsAppMessage(items, customerNote, customerName);
   const encodedText = encodeURIComponent(message);
   return `https://wa.me/${cleanNumber}?text=${encodedText}`;
 }

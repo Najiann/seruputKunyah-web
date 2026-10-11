@@ -5,9 +5,32 @@ import { StoreConfig } from '../types';
 
 interface FooterProps {
   storeConfig: StoreConfig;
+  onTriggerSecretDev?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ storeConfig }) => {
+export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev }) => {
+  const [clickCount, setClickCount] = React.useState(0);
+  const clickTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleCopyrightClick = () => {
+    if (!onTriggerSecretDev) return;
+    setClickCount(prev => {
+      const next = prev + 1;
+      if (next >= 5) {
+        onTriggerSecretDev();
+        return 0;
+      }
+      return next;
+    });
+
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+    clickTimeoutRef.current = setTimeout(() => {
+      setClickCount(0);
+    }, 2500);
+  };
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -100,11 +123,16 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig }) => {
         </div>
 
         {/* Copyright */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#806B58] gap-2">
-          <p>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#806B58] gap-3 border-t border-[#E8D5B5]/60 mt-2">
+          <p
+            onClick={handleCopyrightClick}
+            className="cursor-default select-none transition-colors"
+            title=""
+          >
             &copy; {new Date().getFullYear()} <strong>SERUPUT &amp; KUNYAH</strong>. All rights reserved.
           </p>
-          <p className="flex items-center gap-1">
+
+          <p className="flex items-center gap-1 select-none">
             <span>Dibuat dengan</span>
             <Heart className="w-3.5 h-3.5 text-[#C58B55] fill-[#C58B55]" />
             <span>untuk Komunitas Kampus</span>

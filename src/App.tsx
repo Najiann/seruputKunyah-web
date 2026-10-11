@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CartProvider, useCart } from './context/CartContext';
 import { getStoreConfig } from './config/storeConfig';
 import { StoreConfig } from './types';
@@ -17,14 +17,42 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { FloatingControls } from './components/FloatingControls';
-import { StoreConfigModal } from './components/StoreConfigModal';
-import { VuePortfolioModal } from './components/VuePortfolioModal';
+import { DevAdminModal } from './components/DevAdminModal';
 
 function MainLayout() {
   const [storeConfig, setStoreConfig] = useState<StoreConfig>(getStoreConfig());
-  const [isConfigOpen, setIsConfigOpen] = useState(false);
-  const [isVueGuideOpen, setIsVueGuideOpen] = useState(false);
+  const [isDevAdminOpen, setIsDevAdminOpen] = useState(false);
   const { openCart } = useCart();
+
+  // Keyboard shortcut Shift + A to open secret Developer & Admin Panel
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        const tag = (e.target as HTMLElement)?.tagName;
+        // Don't intercept when user is typing text in an input or textarea
+        if (tag === 'INPUT' || tag === 'TEXTAREA') {
+          return;
+        }
+        e.preventDefault();
+        setIsDevAdminOpen(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Also support ?admin=true or ?dev=true in URL for easy phone/tablet access
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('admin') === 'true' || params.get('dev') === 'true') {
+        setIsDevAdminOpen(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   const handleOrderNow = () => {
     const menuEl = document.getElementById('menu');
@@ -38,10 +66,7 @@ function MainLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFAF1] text-[#70412E]">
       {/* Top Navbar */}
-      <Navbar
-        onOpenConfig={() => setIsConfigOpen(true)}
-        onOpenVueGuide={() => setIsVueGuideOpen(true)}
-      />
+      <Navbar />
 
       {/* Main Page Sections */}
       <main className="flex-1">
@@ -61,36 +86,30 @@ function MainLayout() {
         <OrderSteps />
 
         {/* F. Contact & Service Area */}
-        <ContactSection
-          storeConfig={storeConfig}
-          onOpenConfig={() => setIsConfigOpen(true)}
-        />
+        <ContactSection storeConfig={storeConfig} />
       </main>
 
-      {/* G. Footer */}
-      <Footer storeConfig={storeConfig} />
+      {/* G. Footer with secret 5-tap developer trigger for mobile presentation */}
+      <Footer
+        storeConfig={storeConfig}
+        onTriggerSecretDev={() => setIsDevAdminOpen(true)}
+      />
 
       {/* Interactive Cart Slide-Over Drawer */}
       <CartDrawer
         storeConfig={storeConfig}
-        onOpenConfig={() => setIsConfigOpen(true)}
+        onOpenConfig={() => setIsDevAdminOpen(true)}
       />
 
       {/* Floating Action Controls (WhatsApp & Mobile Cart) */}
       <FloatingControls storeConfig={storeConfig} />
 
-      {/* Store Configuration Modal */}
-      <StoreConfigModal
-        isOpen={isConfigOpen}
-        onClose={() => setIsConfigOpen(false)}
+      {/* Unified Secret Developer & Admin Modal (Shift + A / 5-Tap / URL param) */}
+      <DevAdminModal
+        isOpen={isDevAdminOpen}
+        onClose={() => setIsDevAdminOpen(false)}
         currentConfig={storeConfig}
-        onSave={updated => setStoreConfig(updated)}
-      />
-
-      {/* Vue.js 3 Portfolio Architecture & Migration Modal */}
-      <VuePortfolioModal
-        isOpen={isVueGuideOpen}
-        onClose={() => setIsVueGuideOpen(false)}
+        onSaveConfig={updated => setStoreConfig(updated)}
       />
     </div>
   );

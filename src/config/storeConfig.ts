@@ -3,16 +3,16 @@ import { StoreConfig } from '../types';
 export const DEFAULT_STORE_CONFIG: StoreConfig = {
   // IMPORTANT: Placeholder configuration for student entrepreneurs.
   // Replace with the real business phone number when live (e.g., '6281234567890')
-  whatsappNumber: '6281234567890',
-  whatsappDisplay: '+62 812-3456-7890 (Contoh / Placeholder)',
-  instagramHandle: '@seruputkunyah.id',
-  instagramUrl: 'https://instagram.com',
+  whatsappNumber: '6285180604131',
+  whatsappDisplay: '+62 851-8060-4131',
+  instagramHandle: '@seruputkunyah',
+  instagramUrl: 'https://www.instagram.com/seruputkunyah',
   campusArea: 'Area Sekitar Kampus & Kos Mahasiswa (COD / Antar)',
   operationalHours: 'Senin – Sabtu, 10.00 – 19.30 WIB',
   brandTagline: 'Seruput Segar, Kunyah Lezat',
 };
 
-const STORAGE_KEY = 'seruput_kunyah_config_v1';
+const STORAGE_KEY = 'seruput_kunyah_config_v3';
 
 export function getStoreConfig(): StoreConfig {
   try {

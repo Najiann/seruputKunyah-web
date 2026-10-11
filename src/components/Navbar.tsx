@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Menu, X, Settings2, Code2 } from 'lucide-react';
+import { ShoppingBag, Menu, X } from 'lucide-react';
 import { Logo } from './Logo';
 import { useCart } from '../context/CartContext';
 
 interface NavbarProps {
-  onOpenConfig: () => void;
-  onOpenVueGuide: () => void;
+  onOpenConfig?: () => void;
+  onOpenVueGuide?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenConfig, onOpenVueGuide }) => {
+export const Navbar: React.FC<NavbarProps> = () => {
   const { totalItems, openCart } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -60,28 +60,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConfig, onOpenVueGuide }) 
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Vue.js Portfolio & Architecture Guide Badge */}
-          <button
-            onClick={onOpenVueGuide}
-            type="button"
-            className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-[#78804B] bg-[#78804B]/10 hover:bg-[#78804B]/20 transition-colors border border-[#78804B]/20"
-            title="Lihat Kode & Panduan Migrasi Vue.js 3"
-          >
-            <Code2 className="w-3.5 h-3.5" />
-            <span>Vue.js 3 Guide</span>
-          </button>
-
-          {/* Quick Config Modal Button */}
-          <button
-            onClick={onOpenConfig}
-            type="button"
-            className="hidden sm:inline-flex items-center justify-center p-2 text-[#806B58] hover:text-[#70412E] hover:bg-[#F5E6C8]/60 rounded-full transition-colors"
-            title="Pengaturan Kontak & WhatsApp"
-            aria-label="Pengaturan Toko"
-          >
-            <Settings2 className="w-5 h-5" />
-          </button>
-
           {/* Cart Trigger Button */}
           <button
             onClick={openCart}
@@ -138,30 +116,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConfig, onOpenVueGuide }) 
           </div>
 
           <div className="pt-2 border-t border-[#E8D5B5]/60 flex flex-col gap-2">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenVueGuide();
-              }}
-              type="button"
-              className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-[#78804B] bg-[#78804B]/10 rounded-lg"
-            >
-              <Code2 className="w-4 h-4" />
-              <span>Lihat Kode & Panduan Vue.js 3</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenConfig();
-              }}
-              type="button"
-              className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-[#806B58] bg-[#F5E6C8]/40 rounded-lg"
-            >
-              <Settings2 className="w-4 h-4" />
-              <span>Pengaturan Kontak & WhatsApp Toko</span>
-            </button>
-
             <a
               href="#menu"
               onClick={() => setMobileMenuOpen(false)}
