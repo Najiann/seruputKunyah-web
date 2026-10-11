@@ -1,0 +1,6 @@
+{
+  "name": "SERUPUT & KUNYAH — Seruput Segar, Kunyah Lezat",
+  "description": "Website katalog kuliner dan pemesanan camilan makaroni basah & kering serta es teh segar via WhatsApp untuk SERUPUT & KUNYAH.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
