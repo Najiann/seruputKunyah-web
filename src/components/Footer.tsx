@@ -135,7 +135,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
           <p className="flex items-center gap-1 select-none">
             <span>Dibuat dengan</span>
             <Heart className="w-3.5 h-3.5 text-[#C58B55] fill-[#C58B55]" />
-            <span>untuk Komunitas Kampus</span>
+            <span>untuk Tugas Matkul Kewirausahaan</span>
           </p>
         </div>
 
