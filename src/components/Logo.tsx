@@ -14,20 +14,21 @@ export const Logo: React.FC<LogoProps> = ({
   variant = 'horizontal',
 }) => {
   const iconSizeMap = {
-    sm: 'w-9 h-9',
-    md: 'w-12 h-12',
+    sm: 'w-8 h-8',
+    md: 'w-10 h-10 sm:w-11 sm:h-11',
     lg: 'w-16 h-16',
-    xl: 'w-24 h-24',
+    xl: 'w-24 h-24 sm:w-28 sm:h-28',
   };
 
+  // Authentic hand-crafted vector emblem with transparent background (no white box!)
   const LogoMark = (
     <svg
       viewBox="0 0 200 200"
-      className={`${iconSizeMap[size]} shrink-0 transition-transform duration-300 hover:rotate-3`}
+      className={`${iconSizeMap[size]} shrink-0 transition-transform duration-300 hover:rotate-2`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Outer circular badge frame */}
+      {/* Outer circular badge frame with warm cream fill */}
       <circle
         cx="100"
         cy="96"
@@ -151,7 +152,6 @@ export const Logo: React.FC<LogoProps> = ({
       <rect x="115" y="106" width="16" height="5" rx="2.5" fill="#70412E" />
 
       {/* Curved elbow macaroni noodles inside and above bowl */}
-      {/* Macaroni 1 */}
       <path
         d="M 112 76 C 110 70, 118 66, 124 72 C 122 75, 118 73, 115 76 Z"
         fill="#C58B55"
@@ -159,7 +159,6 @@ export const Logo: React.FC<LogoProps> = ({
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
-      {/* Macaroni 2 */}
       <path
         d="M 124 70 C 128 64, 136 67, 136 74 C 132 75, 131 71, 127 72 Z"
         fill="#C58B55"
@@ -167,14 +166,12 @@ export const Logo: React.FC<LogoProps> = ({
         strokeWidth="2.5"
         strokeLinejoin="round"
       />
-      {/* Macaroni 3 */}
       <path
         d="M 106 82 C 108 76, 116 78, 116 84 C 112 85, 110 82, 108 84 Z"
         fill="#C58B55"
         stroke="#70412E"
         strokeWidth="2.5"
       />
-      {/* Macaroni 4 */}
       <path
         d="M 128 80 C 132 76, 140 79, 138 86 C 135 86, 134 82, 130 83 Z"
         fill="#C58B55"
@@ -183,18 +180,15 @@ export const Logo: React.FC<LogoProps> = ({
       />
 
       {/* Cute face expressions on border */}
-      {/* Left wink & tongue */}
       <path d="M 52 108 L 56 111 L 52 114" stroke="#70412E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       <path d="M 58 112 C 58 118, 64 118, 64 112 Z" fill="#C58B55" stroke="#70412E" strokeWidth="2" />
-
-      {/* Right happy smile */}
       <path d="M 138 111 C 143 115, 149 113, 152 109" stroke="#70412E" strokeWidth="2.5" strokeLinecap="round" fill="none" />
       <circle cx="152" cy="107" r="1.5" fill="#70412E" />
     </svg>
   );
 
   if (variant === 'mark-only') {
-    return <div className={`inline-flex items-center ${className}`}>{LogoMark}</div>;
+    return <div className={`inline-flex items-center shrink-0 ${className}`}>{LogoMark}</div>;
   }
 
   if (variant === 'full') {
@@ -202,11 +196,11 @@ export const Logo: React.FC<LogoProps> = ({
       <div className={`flex flex-col items-center text-center ${className}`}>
         {LogoMark}
         {showText && (
-          <div className="mt-2 flex flex-col items-center">
-            <span className="font-heading font-black tracking-tight text-[#70412E] text-2xl leading-tight">
-              SERUPUT & KUNYAH
+          <div className="mt-3 flex flex-col items-center">
+            <span className="font-heading font-black tracking-tight text-[#70412E] text-2xl sm:text-3xl leading-tight">
+              SERUPUT &amp; KUNYAH
             </span>
-            <span className="font-heading text-xs font-bold text-[#806B58] tracking-wider uppercase mt-0.5">
+            <span className="font-heading text-xs font-bold text-[#806B58] tracking-wider uppercase mt-1">
               Seruput Segar, Kunyah Lezat
             </span>
           </div>
@@ -215,16 +209,16 @@ export const Logo: React.FC<LogoProps> = ({
     );
   }
 
-  // Horizontal variant (default for Navbar & compact header)
+  // Horizontal variant (optimized for Navbar & Footer - airy & clean)
   return (
-    <div className={`inline-flex items-center gap-3 ${className}`}>
+    <div className={`inline-flex items-center gap-2.5 sm:gap-3 shrink-0 ${className}`}>
       {LogoMark}
       {showText && (
         <div className="flex flex-col">
-          <span className="font-heading font-black tracking-tight text-[#70412E] text-lg sm:text-xl leading-none">
+          <span className="font-heading font-black tracking-tight text-[#70412E] text-lg sm:text-xl leading-none whitespace-nowrap">
             SERUPUT &amp; KUNYAH
           </span>
-          <span className="text-[11px] sm:text-xs font-semibold text-[#806B58] tracking-wide mt-1">
+          <span className="hidden xl:block text-[11px] font-semibold text-[#806B58] tracking-wide mt-1 whitespace-nowrap">
             Seruput Segar, Kunyah Lezat
           </span>
         </div>
