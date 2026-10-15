@@ -27,6 +27,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
     { label: 'Paket Kombo', href: '#paket' },
     { label: 'Tentang Kami', href: '#tentang' },
     { label: 'Cara Pesan', href: '#cara-pesan' },
+    { label: 'Ulasan', href: '#ulasan' },
     { label: 'Kontak', href: '#kontak' },
   ];
 

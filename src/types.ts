@@ -40,3 +40,17 @@ export interface StoreConfig {
   operationalHours: string; // e.g. "Senin – Sabtu, 10.00 – 20.00 WIB"
   brandTagline: string;
 }
+
+export interface CustomerReview {
+  id: string;
+  name: string;
+  roleOrAffiliation?: string; // e.g. "Mahasiswa FEB", "Anak Kosan", "Pelanggan Setia"
+  rating: number; // 1 to 5
+  menuBought: string; // e.g. "Makaroni Basah", "Makaroni Kering", "Es Teh Lemon", etc.
+  comment: string; // Ulasan rasa & pengalaman
+  suggestion?: string; // Kritik & saran
+  date: string; // e.g. "12 Okt 2026"
+  isVerified?: boolean;
+}
+
+

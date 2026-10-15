@@ -13,14 +13,18 @@ import { ProductSection } from './components/ProductSection';
 import { BundleSection } from './components/BundleSection';
 import { BrandStory } from './components/BrandStory';
 import { OrderSteps } from './components/OrderSteps';
+import { ReviewSection } from './components/ReviewSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { FloatingControls } from './components/FloatingControls';
 import { DevAdminModal } from './components/DevAdminModal';
+import { getCustomerReviews } from './data/reviews';
+import { CustomerReview } from './types';
 
 function MainLayout() {
   const [storeConfig, setStoreConfig] = useState<StoreConfig>(getStoreConfig());
+  const [reviews, setReviews] = useState<CustomerReview[]>(getCustomerReviews());
   const [isDevAdminOpen, setIsDevAdminOpen] = useState(false);
   const { openCart } = useCart();
 
@@ -85,7 +89,14 @@ function MainLayout() {
         {/* E. How To Order (4 Steps) */}
         <OrderSteps />
 
-        {/* F. Contact & Service Area */}
+        {/* F. Customer Reviews, Ratings & Feedback */}
+        <ReviewSection
+          reviews={reviews}
+          onReviewAdded={updated => setReviews(updated)}
+          storeConfig={storeConfig}
+        />
+
+        {/* G. Contact & Service Area */}
         <ContactSection storeConfig={storeConfig} />
       </main>
 

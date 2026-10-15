@@ -41,6 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
     { label: 'Paket Kombo', href: '#paket' },
     { label: 'Tentang Usaha', href: '#tentang' },
     { label: 'Cara Pemesanan', href: '#cara-pesan' },
+    { label: 'Ulasan & Suara Pelanggan', href: '#ulasan' },
     { label: 'Kontak Admin', href: '#kontak' },
   ];
 
