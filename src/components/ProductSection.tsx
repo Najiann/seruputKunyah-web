@@ -1,16 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { Utensils, Coffee, Sparkles } from 'lucide-react';
-import { PRODUCTS } from '../data/products';
+import { useProducts } from '../context/ProductContext';
 import { ProductCategory } from '../types';
 import { ProductCard } from './ProductCard';
 
 export const ProductSection: React.FC = () => {
+  const { products } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory>('all');
 
   const filteredProducts = useMemo(() => {
-    if (selectedCategory === 'all') return PRODUCTS;
-    return PRODUCTS.filter(p => p.category === selectedCategory);
-  }, [selectedCategory]);
+    if (selectedCategory === 'all') return products.filter(p => p.isActive !== false);
+    return products.filter(p => p.category === selectedCategory && p.isActive !== false);
+  }, [products, selectedCategory]);
 
   const categories: Array<{ id: ProductCategory; label: string; icon: React.ReactNode }> = [
     { id: 'all', label: 'Semua Menu', icon: <Sparkles className="w-4 h-4" /> },
@@ -40,8 +41,8 @@ export const ProductSection: React.FC = () => {
           <div className="inline-flex p-1.5 rounded-2xl bg-[#F5E6C8]/60 border border-[#E8D5B5] shadow-xs gap-1">
             {categories.map(cat => {
               const count = cat.id === 'all' 
-                ? PRODUCTS.length 
-                : PRODUCTS.filter(p => p.category === cat.id).length;
+                ? products.filter(p => p.isActive !== false).length 
+                : products.filter(p => p.category === cat.id && p.isActive !== false).length;
               const isActive = selectedCategory === cat.id;
 
               return (

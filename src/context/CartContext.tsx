@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { Product, CartItem } from '../types';
-import { PRODUCTS } from '../data/products';
+import { useProducts } from './ProductContext';
 
 interface CartContextType {
   items: CartItem[];
@@ -28,15 +28,16 @@ const STORAGE_KEY = 'seruput_kunyah_cart_v1';
 const NAME_STORAGE_KEY = 'seruput_kunyah_customer_name';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { products, bundles } = useProducts();
+
   const [items, setItems] = useState<CartItem[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as Array<{ productId: string; quantity: number; notes?: string }>;
-        // Re-hydrate with current product data from single source of truth
         const hydrated: CartItem[] = [];
         parsed.forEach(entry => {
-          const product = PRODUCTS.find(p => p.id === entry.productId);
+          const product = products.find(p => p.id === entry.productId);
           if (product && entry.quantity > 0) {
             hydrated.push({
               product,
@@ -52,6 +53,41 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     return [];
   });
+
+  // Whenever products or bundles update in the centralized module, automatically sync cart item names and prices!
+  useEffect(() => {
+    setItems(prevItems => {
+      let changed = false;
+      const updated = prevItems.map(item => {
+        const liveProduct = products.find(p => p.id === item.product.id);
+        if (liveProduct && (liveProduct.price !== item.product.price || liveProduct.name !== item.product.name)) {
+          changed = true;
+          return {
+            ...item,
+            product: {
+              ...item.product,
+              name: liveProduct.name,
+              price: liveProduct.price,
+            },
+          };
+        }
+        const liveBundle = bundles.find(b => b.id === item.product.id);
+        if (liveBundle && (liveBundle.bundlePrice !== item.product.price || liveBundle.name !== item.product.name)) {
+          changed = true;
+          return {
+            ...item,
+            product: {
+              ...item.product,
+              name: liveBundle.name,
+              price: liveBundle.bundlePrice,
+            },
+          };
+        }
+        return item;
+      });
+      return changed ? updated : prevItems;
+    });
+  }, [products, bundles]);
 
   const [customerName, setCustomerNameState] = useState<string>(() => {
     try {
@@ -96,6 +132,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addToCart = (product: Product, quantity: number = 1, notes: string = '') => {
+    // Always use the latest live price from centralized store if available
+    const liveProduct = products.find(p => p.id === product.id) || product;
     setItems(prevItems => {
       const existingIndex = prevItems.findIndex(item => item.product.id === product.id);
       if (existingIndex > -1) {
@@ -103,16 +141,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const newQty = next[existingIndex].quantity + quantity;
         next[existingIndex] = {
           ...next[existingIndex],
+          product: liveProduct,
           quantity: newQty,
           notes: notes || next[existingIndex].notes,
         };
         return next;
       } else {
-        return [...prevItems, { product, quantity, notes }];
+        return [...prevItems, { product: liveProduct, quantity, notes }];
       }
     });
 
-    showToast(`✓ ${product.name} (${quantity}x) dimasukkan ke keranjang`);
+    showToast(`✓ ${liveProduct.name} (${quantity}x) dimasukkan ke keranjang`);
   };
 
   const updateQuantity = (productId: string, delta: number) => {

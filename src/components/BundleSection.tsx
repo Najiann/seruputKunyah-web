@@ -1,18 +1,19 @@
 import React from 'react';
 import { Sparkles, ShoppingBag, ArrowRight } from 'lucide-react';
-import { BUNDLE_ITEMS, BUNDLES_ENABLED, PRODUCTS } from '../data/products';
+import { useProducts } from '../context/ProductContext';
 import { formatRupiah } from '../utils/currency';
 import { useCart } from '../context/CartContext';
-import { Product } from '../types';
+import { Product, BundleItem } from '../types';
 
 export const BundleSection: React.FC = () => {
+  const { bundles } = useProducts();
   const { addToCart } = useCart();
 
-  if (!BUNDLES_ENABLED || BUNDLE_ITEMS.length === 0) {
+  if (!bundles || bundles.length === 0) {
     return null;
   }
 
-  const handleAddBundle = (bundle: typeof BUNDLE_ITEMS[0]) => {
+  const handleAddBundle = (bundle: BundleItem) => {
     // Add as a special bundle product representation into cart
     const bundleProduct: Product = {
       id: bundle.id,
@@ -57,7 +58,7 @@ export const BundleSection: React.FC = () => {
 
         {/* Bundle Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          {BUNDLE_ITEMS.map(bundle => (
+          {bundles.map(bundle => (
             <div
               key={bundle.id}
               className="bg-[#FFFAF1] rounded-2xl border-2 border-[#E8D5B5] p-6 hover:border-[#C58B55] shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between"

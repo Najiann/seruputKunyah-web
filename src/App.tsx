@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { ProductProvider } from './context/ProductContext';
 import { CartProvider, useCart } from './context/CartContext';
 import { getStoreConfig } from './config/storeConfig';
 import { StoreConfig } from './types';
@@ -128,8 +129,10 @@ function MainLayout() {
 
 export default function App() {
   return (
-    <CartProvider>
-      <MainLayout />
-    </CartProvider>
+    <ProductProvider>
+      <CartProvider>
+        <MainLayout />
+      </CartProvider>
+    </ProductProvider>
   );
 }

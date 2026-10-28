@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { X, Star, Send, MessageSquareHeart, Check, AlertCircle, Plus } from 'lucide-react';
 import { CustomerReview, StoreConfig } from '../types';
 import { addCustomerReview } from '../data/reviews';
-// KITA IMPOR DATA DARI SATU SUMBER ASLI (Single Source of Truth)
-// Seperti memanggil Model Product di Laravel!
-import { PRODUCTS, BUNDLE_ITEMS, BUNDLES_ENABLED } from '../data/products';
+import { useProducts } from '../context/ProductContext';
 
 /**
  * ============================================================================
@@ -57,10 +55,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
    * Kalau kamu nambah/hapus menu di src/data/products.ts, di sini otomatis ikut berubah.
    * Di Laravel, konsepnya persis: Product::pluck('name')
    */
-  const menuOptions: string[] = [
-    ...PRODUCTS.map(product => product.name),
-    ...(BUNDLES_ENABLED ? BUNDLE_ITEMS.map(bundle => bundle.name) : []),
-  ];
+  const { menuOptions } = useProducts();
 
   /**
    * ============================================================================
