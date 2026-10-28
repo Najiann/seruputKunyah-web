@@ -11,6 +11,8 @@ export interface Product {
   badge?: string;
   spicyOptions?: string[];
   isCustomizable?: boolean;
+  isActive?: boolean;
+  stock?: number;
 }
 
 export interface BundleItem {
@@ -23,6 +25,7 @@ export interface BundleItem {
   productsIncluded: string[];
   image: string;
   badge: string;
+  isActive?: boolean;
 }
 
 export interface CartItem {

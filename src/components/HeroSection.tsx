@@ -1,11 +1,14 @@
 import React from 'react';
 import { ArrowDown, Flame, Sparkles, Coffee } from 'lucide-react';
+import { useProducts } from '../context/ProductContext';
+import { formatRupiah } from '../utils/currency';
 
 interface HeroSectionProps {
   onOrderNow: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderNow }) => {
+  const { lowestPrice } = useProducts();
   return (
     <section
       id="hero"
@@ -97,7 +100,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOrderNow }) => {
                 <div className="absolute bottom-4 left-4 sm:bottom-5 sm:left-5 bg-[#FFFAF1]/95 backdrop-blur-md py-3 px-4 sm:px-5 rounded-2xl border-2 border-[#E8D5B5] shadow-lg flex items-center gap-3.5 transition-transform duration-300 hover:scale-105">
                   <div className="px-3 py-2 rounded-xl bg-[#F5E6C8] border border-[#E8D5B5] flex flex-col items-center justify-center shrink-0">
                     <span className="text-[10px] font-bold text-[#806B58] uppercase tracking-wider leading-none">Mulai</span>
-                    <span className="font-heading text-base sm:text-lg font-black text-[#70412E] leading-tight">Rp4.000</span>
+                    <span className="font-heading text-base sm:text-lg font-black text-[#70412E] leading-tight">
+                      {formatRupiah(lowestPrice)}
+                    </span>
                   </div>
                   <div className="text-left pr-1">
                     <p className="text-xs sm:text-sm font-black text-[#70412E] leading-tight">

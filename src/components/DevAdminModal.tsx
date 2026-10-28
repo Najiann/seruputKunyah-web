@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { X, Code2, Settings2, ShieldCheck, Terminal } from 'lucide-react';
+import { X, Code2, Settings2, ShieldCheck, Terminal, Tag } from 'lucide-react';
 import { StoreConfig } from '../types';
 import { StoreConfigModal } from './StoreConfigModal';
 import { VuePortfolioModal } from './VuePortfolioModal';
+import { ProductPriceModal } from './ProductPriceModal';
 
 interface DevAdminModalProps {
   isOpen: boolean;
@@ -17,7 +18,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
   currentConfig,
   onSaveConfig,
 }) => {
-  const [activeModal, setActiveModal] = useState<'none' | 'vue' | 'config'>('none');
+  const [activeModal, setActiveModal] = useState<'none' | 'vue' | 'config' | 'price'>('none');
 
   if (!isOpen) return null;
 
@@ -104,6 +105,27 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                   </p>
                 </div>
               </button>
+
+              {/* Option 3: Centralized Product & Price Management (SSOT) */}
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveModal('price');
+                }}
+                className="w-full text-left p-4 rounded-2xl bg-white border border-[#E8D5B5] hover:border-[#78804B] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
+              >
+                <div className="p-2.5 rounded-xl bg-[#78804B]/15 text-[#78804B] group-hover:bg-[#78804B] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <Tag className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-heading font-black text-sm text-[#70412E]">
+                    Kelola Produk &amp; Harga (Modul Terpusat)
+                  </h4>
+                  <p className="text-[11px] text-[#806B58] mt-0.5">
+                    Ubah harga produk kapan saja; seluruh katalog, paket bundling, keranjang &amp; kasir langsung ikut berubah otomatis.
+                  </p>
+                </div>
+              </button>
             </div>
 
             {/* Footer tip */}
@@ -129,6 +151,11 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
         onClose={() => setActiveModal('none')}
         currentConfig={currentConfig}
         onSave={onSaveConfig}
+      />
+
+      <ProductPriceModal
+        isOpen={activeModal === 'price'}
+        onClose={() => setActiveModal('none')}
       />
     </>
   );
