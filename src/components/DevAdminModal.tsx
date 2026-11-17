@@ -112,17 +112,17 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                 onClick={() => {
                   setActiveModal('price');
                 }}
-                className="w-full text-left p-4 rounded-2xl bg-white border border-[#E8D5B5] hover:border-[#78804B] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
+                className="w-full text-left p-4 rounded-2xl bg-white border border-[#EAD29C] hover:border-[#FF8234] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
               >
-                <div className="p-2.5 rounded-xl bg-[#78804B]/15 text-[#78804B] group-hover:bg-[#78804B] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                <div className="p-2.5 rounded-xl bg-[#FF8234]/15 text-[#FF8234] group-hover:bg-[#FF8234] group-hover:text-white transition-colors shrink-0 mt-0.5">
                   <Tag className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-heading font-black text-sm text-[#70412E]">
+                  <h4 className="font-heading font-black text-sm text-[#C7320B]">
                     Kelola Produk &amp; Harga (Modul Terpusat)
                   </h4>
-                  <p className="text-[11px] text-[#806B58] mt-0.5">
-                    Ubah harga produk kapan saja; seluruh katalog, paket bundling, keranjang &amp; kasir langsung ikut berubah otomatis.
+                  <p className="text-[11px] text-[#6E2C1B] mt-0.5">
+                    Ubah harga produk kapan saja; seluruh katalog, keranjang &amp; kasir langsung ikut berubah otomatis.
                   </p>
                 </div>
               </button>

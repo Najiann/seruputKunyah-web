@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
+import { BUNDLES_ENABLED } from '../data/products';
 import { formatRupiah } from '../utils/currency';
 import { useCart } from '../context/CartContext';
 import { Product, BundleItem } from '../types';
@@ -9,7 +10,7 @@ export const BundleSection: React.FC = () => {
   const { bundles } = useProducts();
   const { addToCart } = useCart();
 
-  if (!bundles || bundles.length === 0) {
+  if (!BUNDLES_ENABLED || !bundles || bundles.length === 0) {
     return null;
   }
 

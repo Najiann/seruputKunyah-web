@@ -11,7 +11,6 @@ import { StoreConfig } from './types';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { ProductSection } from './components/ProductSection';
-import { BundleSection } from './components/BundleSection';
 import { BrandStory } from './components/BrandStory';
 import { OrderSteps } from './components/OrderSteps';
 import { ReviewSection } from './components/ReviewSection';
@@ -108,10 +107,7 @@ function MainLayout() {
         {/* B. Product Menu Section */}
         <ProductSection />
 
-        {/* C. Optional Bundles / Recommendation Packages */}
-        <BundleSection />
-
-        {/* D. Brand Story Section */}
+        {/* C. Brand Story Section */}
         <BrandStory />
 
         {/* E. How To Order (4 Steps) */}

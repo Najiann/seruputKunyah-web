@@ -1,4 +1,5 @@
 import { Product, BundleItem, ProductCategory } from '../types';
+import { BUNDLES_ENABLED } from '../data/products';
 
 /**
  * ============================================================================
@@ -198,9 +199,10 @@ export function calculateBundles(products: Product[] = getStoredProducts()): Bun
  * Mengambil opsi nama menu lengkap untuk dropdown ulasan / pencarian POS.
  */
 export function getAllMenuNames(products: Product[] = getStoredProducts()): string[] {
-  const bundles = calculateBundles(products);
+  const bundles = BUNDLES_ENABLED ? calculateBundles(products) : [];
   return [
     ...products.filter(p => p.isActive !== false).map(p => p.name),
     ...bundles.map(b => b.name),
   ];
 }
+

@@ -14,7 +14,7 @@ import {
 import { ExternalLink, Loader2, MapPin, Navigation } from 'lucide-react';
 import { StoreConfig } from '../types';
 
-const MAPS_API_KEY =
+const INITIAL_MAPS_API_KEY =
   (import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined) ||
   (typeof __GOOGLE_MAPS_API_KEY__ !== 'undefined' ? __GOOGLE_MAPS_API_KEY__ : '');
 
@@ -354,9 +354,58 @@ export const StoreLocationMap: React.FC<StoreLocationMapProps> = ({
   storeConfig,
   onResolvedUriChange,
 }) => {
+  const [mapsApiKey, setMapsApiKey] = useState<string>(INITIAL_MAPS_API_KEY);
+  const [isLoadingKey, setIsLoadingKey] = useState<boolean>(!INITIAL_MAPS_API_KEY);
   const fallbackUrl = buildExternalMapsUrl(storeConfig);
 
-  if (!MAPS_API_KEY) {
+  useEffect(() => {
+    if (INITIAL_MAPS_API_KEY) {
+      return;
+    }
+
+    let cancelled = false;
+    const loadRuntimeConfig = async () => {
+      try {
+        const res = await fetch('/api/maps-config', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = (await res.json()) as { apiKey?: string };
+        if (!cancelled && data.apiKey) {
+          setMapsApiKey(data.apiKey);
+        }
+      } catch {
+        // Fallback UI handles static environments without backend
+      } finally {
+        if (!cancelled) {
+          setIsLoadingKey(false);
+        }
+      }
+    };
+
+    void loadRuntimeConfig();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (isLoadingKey) {
+    return (
+      <div className="w-full h-[340px] sm:h-[400px] bg-[#F5E7B8]/60 flex flex-col items-center justify-center gap-3 px-6 text-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#C7320B]/10 text-[#C7320B] flex items-center justify-center">
+          <Loader2 className="w-5 h-5 animate-spin" />
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm font-bold text-[#C7320B]">
+            Menyiapkan Google Maps...
+          </p>
+          <p className="text-xs text-[#6E2C1B]">
+            {storeConfig.storeAddress}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!mapsApiKey) {
     return (
       <MapFallbackCard
         storeConfig={storeConfig}
@@ -368,7 +417,7 @@ export const StoreLocationMap: React.FC<StoreLocationMapProps> = ({
 
   return (
     <APIProvider
-      apiKey={MAPS_API_KEY}
+      apiKey={mapsApiKey}
       libraries={['places', 'marker']}
       language="id"
       region="ID"
@@ -380,3 +429,4 @@ export const StoreLocationMap: React.FC<StoreLocationMapProps> = ({
     </APIProvider>
   );
 };
+
