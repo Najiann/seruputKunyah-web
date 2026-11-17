@@ -21,6 +21,7 @@ import { FloatingControls } from './components/FloatingControls';
 import { DevAdminModal } from './components/DevAdminModal';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { getCustomerReviews } from './data/reviews';
+import { fetchPublicReviews } from './services/reviewService';
 import { CustomerReview } from './types';
 
 function MainLayout({ onOpenAdminPortal }: { onOpenAdminPortal: () => void }) {
@@ -29,6 +30,25 @@ function MainLayout({ onOpenAdminPortal }: { onOpenAdminPortal: () => void }) {
   const [isDevAdminOpen, setIsDevAdminOpen] = useState(false);
   const [isGmpQuotaExceeded, setIsGmpQuotaExceeded] = useState(false);
   const { openCart } = useCart();
+
+  // Load live reviews from Supabase (falls back cleanly to local storage if not yet configured)
+  useEffect(() => {
+    let active = true;
+    const loadReviews = async () => {
+      try {
+        const result = await fetchPublicReviews();
+        if (active) {
+          setReviews(result.reviews);
+        }
+      } catch {
+        // Keep fallback reviews
+      }
+    };
+    void loadReviews();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Listen for Google Maps Platform quota limit events (Tier 1 & Tier 2)
   useEffect(() => {

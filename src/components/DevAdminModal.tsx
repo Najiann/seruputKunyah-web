@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { X, Code2, Settings2, ShieldCheck, Terminal, Tag, LayoutDashboard } from 'lucide-react';
+import { X, Code2, Settings2, ShieldCheck, Terminal, Tag, LayoutDashboard, Camera } from 'lucide-react';
 import { StoreConfig } from '../types';
 import { StoreConfigModal } from './StoreConfigModal';
 import { VuePortfolioModal } from './VuePortfolioModal';
 import { ProductPriceModal } from './ProductPriceModal';
+import { QuickPhotoManagerModal } from './QuickPhotoManagerModal';
 
 interface DevAdminModalProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
   onSaveConfig,
   onOpenAdminPortal,
 }) => {
-  const [activeModal, setActiveModal] = useState<'none' | 'vue' | 'config' | 'price'>('none');
+  const [activeModal, setActiveModal] = useState<'none' | 'vue' | 'config' | 'price' | 'photos'>('none');
 
   if (!isOpen) return null;
 
@@ -151,6 +152,26 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                   </p>
                 </div>
               </button>
+              {/* Option 4: Quick Product Photo Modal */}
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveModal('photos');
+                }}
+                className="w-full text-left p-4 rounded-2xl bg-white border border-[#EAD29C] hover:border-[#FF8234] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
+              >
+                <div className="p-2.5 rounded-xl bg-[#FF8234]/15 text-[#FF8234] group-hover:bg-[#FF8234] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                  <Camera className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-heading font-black text-sm text-[#C7320B]">
+                    Ganti Foto Produk (Upload &amp; URL)
+                  </h4>
+                  <p className="text-[11px] text-[#6E2C1B] mt-0.5">
+                    Unggah foto baru dari HP/Laptop ke Supabase Storage atau tempel URL foto langsung.
+                  </p>
+                </div>
+              </button>
             </div>
 
             {/* Footer tip */}
@@ -181,6 +202,12 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
       <ProductPriceModal
         isOpen={activeModal === 'price'}
         onClose={() => setActiveModal('none')}
+      />
+
+      <QuickPhotoManagerModal
+        isOpen={activeModal === 'photos'}
+        onClose={() => setActiveModal('none')}
+        onOpenAdminPortal={onOpenAdminPortal}
       />
     </>
   );

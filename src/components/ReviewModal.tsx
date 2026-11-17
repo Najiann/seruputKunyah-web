@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Star, Send, MessageSquareHeart, Check, AlertCircle, Plus } from 'lucide-react';
 import { CustomerReview, StoreConfig } from '../types';
-import { addCustomerReview } from '../data/reviews';
+import { submitPublicReview } from '../services/reviewService';
 import { useProducts } from '../context/ProductContext';
 
 /**
@@ -41,21 +41,12 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
   const [suggestion, setSuggestion] = useState<string>('');                        // Kritik & saran
   const [sendToWa, setSendToWa] = useState<boolean>(false);                        // Centang kirim ke WA
   const [errorMessage, setErrorMessage] = useState<string>('');                    // Pesan validasi jika ada error
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);                // Status sedang mengirim ke database
   const [isSuccess, setIsSuccess] = useState<boolean>(false);                      // Status sukses kirim
+  const { menuOptions } = useProducts();
 
   // Jika isOpen = false, jangan render apa-apa (sembunyikan modal)
   if (!isOpen) return null;
-
-  /**
-   * ============================================================================
-   * DATA OPSI MENU (Dinamis dari products.ts)
-   * ============================================================================
-   * Ini bagian yang kita bahas tadi!
-   * Alih-alih menulis nama menu manual, kita langsung ambil dari PRODUCTS dan BUNDLE_ITEMS.
-   * Kalau kamu nambah/hapus menu di src/data/products.ts, di sini otomatis ikut berubah.
-   * Di Laravel, konsepnya persis: Product::pluck('name')
-   */
-  const { menuOptions } = useProducts();
 
   /**
    * ============================================================================
@@ -88,7 +79,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
    * HANDLER SUBMIT (Ibarat fungsi store(Request $request) di Controller Laravel)
    * ============================================================================
    */
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Cegah halaman reload (khas Single Page Application / SPA)
 
     // 1. Validasi sederhana
@@ -106,53 +97,68 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
     }
 
     setErrorMessage('');
+    setIsSubmitting(true);
     // Gabungkan array menu menjadi teks dipisah koma (misal: "Makaroni Basah, Es Teh Lemon")
     const menuSummary = selectedMenus.join(', ');
 
-    // 2. Simpan ke database lokal (localStorage)
-    const updated = addCustomerReview({
-      name: name.trim(),
-      roleOrAffiliation: role.trim() || 'Pelanggan Kampus',
-      rating,
-      menuBought: menuSummary,
-      comment: comment.trim(),
-      suggestion: suggestion.trim() || undefined,
-    });
+    try {
+      // 2. Simpan ke database Supabase (otomatis fallback lokal jika belum dikonfigurasi)
+      const result = await submitPublicReview({
+        name: name.trim(),
+        roleOrAffiliation: role.trim() || 'Pelanggan',
+        rating,
+        menuBought: menuSummary,
+        comment: comment.trim(),
+        suggestion: suggestion.trim() || undefined,
+      });
 
-    // Beritahu komponen induk bahwa data review sudah bertambah
-    onReviewAdded(updated);
-    setIsSuccess(true);
+      // Beritahu komponen induk bahwa data review sudah bertambah
+      onReviewAdded(result.reviews);
+      setIsSuccess(true);
 
-    // 3. Jika dicentang, kirimkan juga kritik & saran ke WhatsApp Toko
-    if (sendToWa) {
-      const waText = [
-        'Halo admin SERUPUT & KUNYAH! Saya baru saja mengisi ulasan & saran di website:\n',
-        `Nama: ${name.trim()}`,
-        `Menu yang dibeli: ${menuSummary}`,
-        `Rating: ${'⭐'.repeat(rating)} (${rating}/5)`,
-        `Ulasan: ${comment.trim()}`,
-        suggestion.trim() ? `Kritik & Saran: ${suggestion.trim()}` : '',
-        '\nTerima kasih dan sukses selalu untuk usahanya!',
-      ]
-        .filter(Boolean)
-        .join('\n');
+      // 3. Jika dicentang, buka chat WhatsApp Toko lewat anchor click aman
+      if (sendToWa) {
+        const waText = [
+          'Halo admin SERUPUT & KUNYAH! Saya baru saja mengisi ulasan & saran di website:\n',
+          `Nama: ${name.trim()}`,
+          `Menu yang dibeli: ${menuSummary}`,
+          `Rating: ${'⭐'.repeat(rating)} (${rating}/5)`,
+          `Ulasan: ${comment.trim()}`,
+          suggestion.trim() ? `Kritik & Saran: ${suggestion.trim()}` : '',
+          '\nTerima kasih dan sukses selalu untuk usahanya!',
+        ]
+          .filter(Boolean)
+          .join('\n');
 
-      const cleanPhone = storeConfig.whatsappNumber.replace(/[^0-9]/g, '');
-      const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`;
-      window.open(url, '_blank', 'noopener,noreferrer');
+        const cleanPhone = storeConfig.whatsappNumber.replace(/[^0-9]/g, '');
+        const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`;
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      // 4. Reset formulir & tutup modal setelah jeda animasi 1.2 detik
+      setTimeout(() => {
+        setIsSuccess(false);
+        setName('');
+        setRole('');
+        setComment('');
+        setSuggestion('');
+        setSelectedMenus([menuOptions[0] || 'Makaroni Basah']);
+        setRating(5);
+        onClose();
+      }, 1200);
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error ? err.message : 'Gagal menyimpan ulasan. Silakan coba lagi.'
+      );
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // 4. Reset formulir & tutup modal setelah jeda animasi 1.2 detik
-    setTimeout(() => {
-      setIsSuccess(false);
-      setName('');
-      setRole('');
-      setComment('');
-      setSuggestion('');
-      setSelectedMenus(['Makaroni Basah']);
-      setRating(5);
-      onClose();
-    }, 1200);
   };
 
   /**
@@ -367,7 +373,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
               <button
                 type="submit"
-                disabled={isSuccess}
+                disabled={isSuccess || isSubmitting}
                 className="px-5 py-2.5 text-xs font-bold text-white bg-[#C7320B] hover:bg-[#A12606] rounded-xl shadow-xs transition-all active:scale-95 flex items-center gap-2 cursor-pointer disabled:opacity-75"
               >
                 {isSuccess ? (
@@ -375,6 +381,8 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                     <Check className="w-4 h-4 text-green-300" />
                     <span>Ulasan Berhasil Disimpan!</span>
                   </>
+                ) : isSubmitting ? (
+                  <span>Menyimpan Ulasan...</span>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />

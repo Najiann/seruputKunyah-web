@@ -14,6 +14,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     product.spicyOptions ? product.spicyOptions[1] || product.spicyOptions[0] : ''
   );
   const [isAdded, setIsAdded] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
+
+  React.useEffect(() => {
+    setImgFailed(false);
+  }, [product.image]);
 
   const handleAdd = () => {
     addToCart(product, 1, selectedVariant);
@@ -26,15 +31,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <article className="group bg-[#FFFDF5] rounded-2xl border border-[#EAD29C] overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col h-full hover:border-[#FF8234]/80">
       {/* Product Image Frame */}
-      <div className="relative aspect-4/3 overflow-hidden bg-[#F5E7B8]/50">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          loading="lazy"
-          width={400}
-          height={300}
-        />
+      <div className="relative aspect-4/3 overflow-hidden bg-[#F5E7B8]/50 flex items-center justify-center">
+        {product.image && !imgFailed ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+            width={400}
+            height={300}
+            onError={() => setImgFailed(true)}
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-[#F5E7B8] to-[#EAD29C] flex flex-col items-center justify-center p-4 text-center">
+            <span className="font-heading font-black text-3xl text-[#C7320B]">
+              {product.name.slice(0, 1)}
+            </span>
+            <span className="text-xs font-bold text-[#6E2C1B] mt-1">{product.name}</span>
+          </div>
+        )}
 
         {/* Category & Badge Overlay */}
         <div className="absolute top-3 left-3 flex items-center gap-1.5">

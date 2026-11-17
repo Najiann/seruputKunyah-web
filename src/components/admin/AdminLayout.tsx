@@ -9,11 +9,12 @@ import {
   ExternalLink,
   Menu,
   X,
+  MessageSquareHeart,
 } from 'lucide-react';
 import { useAdminAuth } from './AdminAuthContext';
 import { Logo } from '../Logo';
 
-export type AdminTab = 'dashboard' | 'pos' | 'products' | 'transactions' | 'reports';
+export type AdminTab = 'dashboard' | 'pos' | 'products' | 'transactions' | 'reviews' | 'reports';
 
 interface AdminLayoutProps {
   activeTab: AdminTab;
@@ -27,6 +28,7 @@ const TAB_LABELS: Record<AdminTab, string> = {
   pos: 'Point of Sale (POS)',
   products: 'Produk & Inventori',
   transactions: 'Riwayat Transaksi',
+  reviews: 'Ulasan Pelanggan',
   reports: 'Laporan Penjualan',
 };
 
@@ -51,6 +53,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
     { id: 'pos', label: 'Kasir POS', icon: <ShoppingCart className="w-4 h-4" /> },
     { id: 'products', label: 'Produk & Stok', icon: <Package className="w-4 h-4" /> },
     { id: 'transactions', label: 'Riwayat Transaksi', icon: <ReceiptText className="w-4 h-4" /> },
+    { id: 'reviews', label: 'Ulasan Pelanggan', icon: <MessageSquareHeart className="w-4 h-4" /> },
     { id: 'reports', label: 'Laporan Penjualan', icon: <BarChart3 className="w-4 h-4" />, adminOnly: true },
   ];
 

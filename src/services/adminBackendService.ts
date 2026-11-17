@@ -609,6 +609,156 @@ export async function toggleProductActive(
   syncPublicCatalogFromLocal();
 }
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const PRODUCT_IMAGES_BUCKET = 'product-images';
+
+async function compressImageFile(file: File): Promise<{ blob: Blob; dataUrl: string }> {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    throw new Error('Format foto harus JPG, PNG, atau WebP.');
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error('Ukuran file terlalu besar (maksimal 5 MB sebelum kompresi).');
+  }
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Gagal membaca file gambar.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('File gambar tidak valid atau rusak.'));
+      img.onload = () => {
+        const maxWidth = 1000;
+        const maxHeight = 1000;
+        let { width, height } = img;
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Browser tidak mendukung pemrosesan gambar.'));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.84);
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error('Gagal mengompresi gambar.'));
+              return;
+            }
+            resolve({ blob, dataUrl });
+          },
+          'image/jpeg',
+          0.84
+        );
+      };
+      img.src = String(reader.result || '');
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Upload foto produk ke Supabase Storage bucket `product-images`.
+ * Jika bucket belum dibuat atau sedang mode sandbox lokal, fallback otomatis
+ * ke Data URL terkompresi agar penggantian foto tetap langsung berfungsi.
+ */
+export async function uploadProductPhoto(
+  file: File,
+  productId: string,
+  actor: Profile
+): Promise<{ url: string; uploadedToStorage: boolean; storageNote?: string }> {
+  if (actor.role !== 'admin') {
+    throw new Error('Akses ditolak: hanya admin yang dapat mengunggah foto produk.');
+  }
+
+  const { blob, dataUrl } = await compressImageFile(file);
+  const supabase = await ensureSupabaseClient();
+
+  if (supabase) {
+    const safeId = productId.replace(/[^a-zA-Z0-9_-]/g, '');
+    const filePath = `products/${safeId || 'new'}/${Date.now()}.jpg`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(PRODUCT_IMAGES_BUCKET)
+      .upload(filePath, blob, {
+        contentType: 'image/jpeg',
+        cacheControl: '3600',
+        upsert: true,
+      });
+
+    if (!uploadError) {
+      const { data: pub } = supabase.storage
+        .from(PRODUCT_IMAGES_BUCKET)
+        .getPublicUrl(filePath);
+      if (pub?.publicUrl) {
+        return { url: pub.publicUrl, uploadedToStorage: true };
+      }
+    }
+
+    // Fallback gracefully to compressed Data URL when bucket hasn't been created yet
+    return {
+      url: dataUrl,
+      uploadedToStorage: false,
+      storageNote:
+        'Bucket Storage "product-images" belum tersedia di Supabase; foto disimpan sebagai data terkompresi ke kolom produk. Jalankan migrasi SQL 002 untuk menggunakan Supabase Storage CDN.',
+    };
+  }
+
+  return {
+    url: dataUrl,
+    uploadedToStorage: false,
+  };
+}
+
+/**
+ * Perbarui kolom `products.image_url` saja tanpa mengubah harga/stok/nama,
+ * lalu sinkronkan ke katalog website publik.
+ */
+export async function updateProductPhoto(
+  productId: string,
+  imageUrl: string,
+  actor: Profile
+): Promise<void> {
+  if (actor.role !== 'admin') {
+    throw new Error('Akses ditolak: hanya admin yang dapat mengganti foto produk.');
+  }
+  const cleanUrl = imageUrl.trim();
+  if (!cleanUrl) {
+    throw new Error('URL atau file foto produk tidak boleh kosong.');
+  }
+
+  const supabase = await ensureSupabaseClient();
+  if (supabase) {
+    const { error } = await supabase
+      .from('products')
+      .update({ image_url: cleanUrl, updated_at: new Date().toISOString() })
+      .eq('id', productId);
+    if (error) throw new Error(error.message);
+    window.dispatchEvent(new Event('seruput-products-changed'));
+    return;
+  }
+
+  ensureLocalSeed();
+  const products = readJson<RawLocalProduct[]>(LOCAL_KEYS.products, []);
+  const idx = products.findIndex((p) => p.id === productId);
+  if (idx === -1) throw new Error('Produk tidak ditemukan.');
+  products[idx] = {
+    ...products[idx],
+    image_url: cleanUrl,
+    updated_at: new Date().toISOString(),
+  };
+  writeJson(LOCAL_KEYS.products, products);
+  syncPublicCatalogFromLocal();
+}
+
 // ============================================================================
 // INVENTORY & STOCK MOVEMENTS
 // ============================================================================

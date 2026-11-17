@@ -7,13 +7,21 @@ import { AdminPosView } from './AdminPosView';
 import { AdminProductsView } from './AdminProductsView';
 import { AdminTransactionsView } from './AdminTransactionsView';
 import { AdminReportsView } from './AdminReportsView';
+import { AdminReviewsView } from './AdminReviewsView';
 import {
   listAdminProducts,
   listCategories,
   listStockMovements,
   listTransactions,
 } from '../../services/adminBackendService';
-import { AdminProduct, Category, StockMovement, TransactionRecord } from '../../types';
+import { listAdminReviews } from '../../services/reviewService';
+import {
+  AdminProduct,
+  Category,
+  CustomerReview,
+  StockMovement,
+  TransactionRecord,
+} from '../../types';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
 interface AdminPortalProps {
@@ -28,6 +36,8 @@ const AdminPortalShell: React.FC<AdminPortalProps> = ({ onBackToStore }) => {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [movements, setMovements] = useState<StockMovement[]>([]);
   const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
+  const [reviews, setReviews] = useState<CustomerReview[]>([]);
+  const [reviewsTableMissing, setReviewsTableMissing] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -36,16 +46,19 @@ const AdminPortalShell: React.FC<AdminPortalProps> = ({ onBackToStore }) => {
     setLoadingData(true);
     setLoadError(null);
     try {
-      const [cats, prods, movs, txs] = await Promise.all([
+      const [cats, prods, movs, txs, revRes] = await Promise.all([
         listCategories(),
         listAdminProducts(),
         listStockMovements(),
         listTransactions(),
+        listAdminReviews(),
       ]);
       setCategories(cats);
       setProducts(prods);
       setMovements(movs);
       setTransactions(txs);
+      setReviews(revRes.reviews);
+      setReviewsTableMissing(revRes.tableMissing);
     } catch (err) {
       setLoadError(err instanceof Error ? err.message : 'Gagal memuat data admin.');
     } finally {
@@ -135,6 +148,15 @@ const AdminPortalShell: React.FC<AdminPortalProps> = ({ onBackToStore }) => {
       {activeTab === 'transactions' && (
         <AdminTransactionsView
           transactions={transactions}
+          loading={loadingData}
+          onRefresh={refreshAll}
+        />
+      )}
+
+      {activeTab === 'reviews' && (
+        <AdminReviewsView
+          reviews={reviews}
+          tableMissing={reviewsTableMissing}
           loading={loadingData}
           onRefresh={refreshAll}
         />

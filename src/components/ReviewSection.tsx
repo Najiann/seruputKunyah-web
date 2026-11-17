@@ -32,13 +32,13 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({
 
   // Rating metrics
   const averageRating = useMemo(() => {
-    if (reviews.length === 0) return 5;
+    if (reviews.length === 0) return '0.0';
     const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
     return (sum / reviews.length).toFixed(1);
   }, [reviews]);
 
   const fiveStarPercentage = useMemo(() => {
-    if (reviews.length === 0) return 100;
+    if (reviews.length === 0) return 0;
     const count5 = reviews.filter(r => r.rating === 5).length;
     return Math.round((count5 / reviews.length) * 100);
   }, [reviews]);

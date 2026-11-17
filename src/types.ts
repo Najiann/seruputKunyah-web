@@ -56,7 +56,9 @@ export interface CustomerReview {
   comment: string; // Ulasan rasa & pengalaman
   suggestion?: string; // Kritik & saran
   date: string; // e.g. "12 Okt 2026"
+  createdAt?: string; // ISO timestamp from Supabase
   isVerified?: boolean;
+  isPublished?: boolean;
 }
 
 // ============================================================================

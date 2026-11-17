@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   Plus,
   Search,
@@ -10,6 +10,8 @@ import {
   AlertCircle,
   PackageCheck,
   History,
+  Camera,
+  Upload,
 } from 'lucide-react';
 import { AdminProduct, Category, StockMovement } from '../../types';
 import { useAdminAuth } from './AdminAuthContext';
@@ -18,8 +20,10 @@ import {
   saveAdminProduct,
   saveCategory,
   toggleProductActive,
+  uploadProductPhoto,
 } from '../../services/adminBackendService';
 import { formatRupiah } from '../../utils/currency';
+import { ProductPhotoModal } from './ProductPhotoModal';
 
 interface AdminProductsViewProps {
   products: AdminProduct[];
@@ -65,7 +69,12 @@ export const AdminProductsView: React.FC<AdminProductsViewProps> = ({
   const [prodIsActive, setProdIsActive] = useState(true);
   const [prodInitialStock, setProdInitialStock] = useState('0');
   const [isSavingProduct, setIsSavingProduct] = useState(false);
+  const [isUploadingInForm, setIsUploadingInForm] = useState(false);
   const [productFormError, setProductFormError] = useState<string | null>(null);
+  const formPhotoInputRef = useRef<HTMLInputElement>(null);
+
+  // Dedicated Product Photo Modal State
+  const [photoModalProduct, setPhotoModalProduct] = useState<AdminProduct | null>(null);
 
   // Category Modal State
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
@@ -184,6 +193,21 @@ export const AdminProductsView: React.FC<AdminProductsViewProps> = ({
       setProductFormError(err instanceof Error ? err.message : 'Gagal menyimpan produk.');
     } finally {
       setIsSavingProduct(false);
+    }
+  };
+
+  const handleFormPhotoUpload = async (file: File | undefined) => {
+    if (!file || !profile) return;
+    setProductFormError(null);
+    setIsUploadingInForm(true);
+    try {
+      const result = await uploadProductPhoto(file, editingProduct?.id || 'new', profile);
+      setProdImageUrl(result.url);
+    } catch (err) {
+      setProductFormError(err instanceof Error ? err.message : 'Gagal mengunggah foto.');
+    } finally {
+      setIsUploadingInForm(false);
+      if (formPhotoInputRef.current) formPhotoInputRef.current.value = '';
     }
   };
 
@@ -449,7 +473,15 @@ export const AdminProductsView: React.FC<AdminProductsViewProps> = ({
                       <tr key={product.id} className="hover:bg-[#FCF6E0]/60 transition-colors">
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3 min-w-[200px]">
-                            <div className="w-11 h-11 rounded-xl bg-[#F5E7B8] border border-[#EAD29C] overflow-hidden shrink-0 flex items-center justify-center">
+                            <button
+                              type="button"
+                              disabled={!isAdmin}
+                              onClick={() => isAdmin && setPhotoModalProduct(product)}
+                              title={isAdmin ? 'Klik untuk ganti foto produk' : product.name}
+                              className={`w-11 h-11 rounded-xl bg-[#F5E7B8] border border-[#EAD29C] overflow-hidden shrink-0 flex items-center justify-center relative group ${
+                                isAdmin ? 'cursor-pointer hover:border-[#C7320B]' : ''
+                              }`}
+                            >
                               {product.image_url ? (
                                 <img
                                   src={product.image_url}
@@ -465,7 +497,7 @@ export const AdminProductsView: React.FC<AdminProductsViewProps> = ({
                                   {product.name.slice(0, 1)}
                                 </span>
                               )}
-                            </div>
+                            </button>
                             <div className="min-w-0">
                               <p className="font-bold text-sm text-[#C7320B] truncate">
                                 {product.name}
@@ -512,6 +544,15 @@ export const AdminProductsView: React.FC<AdminProductsViewProps> = ({
                         {isAdmin && (
                           <td className="py-3 px-4 text-right whitespace-nowrap">
                             <div className="inline-flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => setPhotoModalProduct(product)}
+                                className="px-2.5 py-1.5 bg-white border border-[#EAD29C] hover:border-[#FF8234] text-[#C7320B] font-bold rounded-lg inline-flex items-center gap-1 cursor-pointer"
+                                title="Ganti foto produk"
+                              >
+                                <Camera className="w-3 h-3" />
+                                <span>Foto</span>
+                              </button>
                               <button
                                 type="button"
                                 onClick={() => openEditProduct(product)}
@@ -753,9 +794,27 @@ export const AdminProductsView: React.FC<AdminProductsViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#6E2C1B] mb-1">
-                    URL Foto Produk
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-[#6E2C1B]">
+                      Foto Produk (Upload atau URL)
+                    </label>
+                    <input
+                      ref={formPhotoInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={(e) => void handleFormPhotoUpload(e.target.files?.[0])}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      disabled={isUploadingInForm}
+                      onClick={() => formPhotoInputRef.current?.click()}
+                      className="px-2.5 py-1 text-[11px] font-bold text-[#C7320B] bg-[#F5E7B8] hover:bg-[#EAD29C] rounded-lg inline-flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                    >
+                      <Upload className="w-3 h-3" />
+                      <span>{isUploadingInForm ? 'Mengunggah...' : 'Upload dari Perangkat'}</span>
+                    </button>
+                  </div>
                   <div className="flex gap-3 items-center">
                     <div className="w-12 h-12 rounded-xl bg-[#F5E7B8] border border-[#EAD29C] overflow-hidden shrink-0 flex items-center justify-center">
                       {prodImageUrl ? (
@@ -774,9 +833,13 @@ export const AdminProductsView: React.FC<AdminProductsViewProps> = ({
                     </div>
                     <input
                       type="text"
-                      value={prodImageUrl}
+                      value={prodImageUrl.startsWith('data:image/') ? '' : prodImageUrl}
                       onChange={(e) => setProdImageUrl(e.target.value)}
-                      placeholder="/images/makaroni-basah.jpg atau https://..."
+                      placeholder={
+                        prodImageUrl.startsWith('data:image/')
+                          ? 'Foto dari perangkat siap disimpan (tempel URL jika ingin ganti)'
+                          : '/images/makaroni-basah.jpg atau https://...'
+                      }
                       className="flex-1 px-3 py-2 text-xs font-mono bg-white border border-[#EAD29C] rounded-xl text-[#3E1004] focus:outline-none focus:ring-2 focus:ring-[#FF8234]"
                     />
                   </div>
@@ -1048,6 +1111,17 @@ export const AdminProductsView: React.FC<AdminProductsViewProps> = ({
           </div>
         </div>
       )}
+      {/* Dedicated Modal: Ganti Foto Produk */}
+      <ProductPhotoModal
+        product={photoModalProduct}
+        actor={profile}
+        onClose={() => setPhotoModalProduct(null)}
+        onSaved={async (msg) => {
+          setActionSuccess(msg);
+          setActionError(null);
+          await onRefresh();
+        }}
+      />
     </div>
   );
 };
