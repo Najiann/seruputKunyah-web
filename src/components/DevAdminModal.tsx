@@ -28,37 +28,37 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
         {/* Backdrop */}
         <div
           onClick={onClose}
-          className="fixed inset-0 bg-[#70412E]/60 backdrop-blur-xs transition-opacity animate-in fade-in"
+          className="fixed inset-0 bg-[#C7320B]/60 backdrop-blur-xs transition-opacity animate-in fade-in"
         />
 
         <div className="min-h-full flex items-center justify-center p-4">
-          <div className="relative bg-[#FFFAF1] border-2 border-[#E8D5B5] rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl animate-in fade-in zoom-in-95 duration-200 space-y-5">
+          <div className="relative bg-[#FCF6E0] border-2 border-[#EAD29C] rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl animate-in fade-in zoom-in-95 duration-200 space-y-5">
             
             {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-[#E8D5B5]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#EAD29C]">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 bg-[#70412E] text-white rounded-xl">
+                <div className="p-2 bg-[#C7320B] text-white rounded-xl">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading text-lg font-black text-[#70412E]">
+                  <h3 className="font-heading text-lg font-black text-[#C7320B]">
                     Developer &amp; Admin Panel
                   </h3>
-                  <p className="text-[11px] font-semibold text-[#806B58]">
-                    Akses Rahasia (Shortcut: <kbd className="px-1.5 py-0.5 bg-[#F5E6C8] rounded text-[#70412E] font-mono text-[10px]">Shift + A</kbd>)
+                  <p className="text-[11px] font-semibold text-[#6E2C1B]">
+                    Akses Rahasia (Shortcut: <kbd className="px-1.5 py-0.5 bg-[#F5E7B8] rounded text-[#C7320B] font-mono text-[10px]">Shift + A</kbd>)
                   </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
                 type="button"
-                className="p-1.5 text-[#806B58] hover:text-[#70412E] rounded-full hover:bg-[#F5E6C8]"
+                className="p-1.5 text-[#6E2C1B] hover:text-[#C7320B] rounded-full hover:bg-[#F5E7B8]"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-[#806B58] leading-relaxed">
+            <p className="text-xs text-[#6E2C1B] leading-relaxed">
               Menu ini tersembunyi dari pembeli umum dan hanya dapat diakses melalui kombinasi tombol atau 5 ketukan rahasia di footer untuk kebutuhan presentasi &amp; konfigurasi.
             </p>
 
@@ -70,16 +70,16 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                 onClick={() => {
                   setActiveModal('vue');
                 }}
-                className="w-full text-left p-4 rounded-2xl bg-white border border-[#E8D5B5] hover:border-[#78804B] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
+                className="w-full text-left p-4 rounded-2xl bg-white border border-[#EAD29C] hover:border-[#FF8234] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
               >
-                <div className="p-2.5 rounded-xl bg-[#78804B]/15 text-[#78804B] group-hover:bg-[#78804B] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                <div className="p-2.5 rounded-xl bg-[#FF8234]/15 text-[#FF8234] group-hover:bg-[#FF8234] group-hover:text-white transition-colors shrink-0 mt-0.5">
                   <Code2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-heading font-black text-sm text-[#70412E]">
+                  <h4 className="font-heading font-black text-sm text-[#C7320B]">
                     Kode Sumber &amp; Panduan Vue.js 3
                   </h4>
-                  <p className="text-[11px] text-[#806B58] mt-0.5">
+                  <p className="text-[11px] text-[#6E2C1B] mt-0.5">
                     Lihat &amp; salin struktur modular Vue 3 (Composition API) untuk portofolio &amp; laporan tugas kuliah.
                   </p>
                 </div>
@@ -91,17 +91,17 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                 onClick={() => {
                   setActiveModal('config');
                 }}
-                className="w-full text-left p-4 rounded-2xl bg-white border border-[#E8D5B5] hover:border-[#C58B55] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
+                className="w-full text-left p-4 rounded-2xl bg-white border border-[#EAD29C] hover:border-[#FF8234] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
               >
-                <div className="p-2.5 rounded-xl bg-[#C58B55]/15 text-[#C58B55] group-hover:bg-[#C58B55] group-hover:text-white transition-colors shrink-0 mt-0.5">
+                <div className="p-2.5 rounded-xl bg-[#FF8234]/15 text-[#FF8234] group-hover:bg-[#FF8234] group-hover:text-white transition-colors shrink-0 mt-0.5">
                   <Settings2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-heading font-black text-sm text-[#70412E]">
-                    Pengaturan Toko &amp; WhatsApp
+                  <h4 className="font-heading font-black text-sm text-[#C7320B]">
+                    Pengaturan Toko, WhatsApp &amp; Maps
                   </h4>
-                  <p className="text-[11px] text-[#806B58] mt-0.5">
-                    Ubah nomor WhatsApp admin, link Instagram, area kampus COD, dan jam operasional.
+                  <p className="text-[11px] text-[#6E2C1B] mt-0.5">
+                    Ubah nomor WhatsApp admin, link Instagram, alamat &amp; Google Maps, area antar, dan jam operasional.
                   </p>
                 </div>
               </button>
@@ -130,9 +130,9 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
 
             {/* Footer tip */}
             <div className="pt-2 text-center">
-              <p className="text-[11px] text-[#806B58] flex items-center justify-center gap-1.5">
-                <Terminal className="w-3.5 h-3.5 text-[#70412E]" />
-                <span>Tekan <kbd className="px-1 bg-[#F5E6C8] rounded text-[#70412E] font-mono text-[10px]">Esc</kbd> untuk menutup panel kapan saja</span>
+              <p className="text-[11px] text-[#6E2C1B] flex items-center justify-center gap-1.5">
+                <Terminal className="w-3.5 h-3.5 text-[#C7320B]" />
+                <span>Tekan <kbd className="px-1 bg-[#F5E7B8] rounded text-[#C7320B] font-mono text-[10px]">Esc</kbd> untuk menutup panel kapan saja</span>
               </p>
             </div>
 

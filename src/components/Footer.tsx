@@ -2,6 +2,7 @@ import React from 'react';
 import { Logo } from './Logo';
 import { MessageCircle, Instagram, Heart, ArrowUp } from 'lucide-react';
 import { StoreConfig } from '../types';
+import { BUNDLES_ENABLED } from '../data/products';
 
 interface FooterProps {
   storeConfig: StoreConfig;
@@ -38,7 +39,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
   const navLinks = [
     { label: 'Beranda', href: '#hero' },
     { label: 'Menu Makanan & Minuman', href: '#menu' },
-    { label: 'Paket Kombo', href: '#paket' },
+    ...(BUNDLES_ENABLED ? [{ label: 'Paket Kombo', href: '#paket' }] : []),
     { label: 'Tentang Usaha', href: '#tentang' },
     { label: 'Cara Pemesanan', href: '#cara-pesan' },
     { label: 'Ulasan & Suara Pelanggan', href: '#ulasan' },
@@ -46,16 +47,16 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
   ];
 
   return (
-    <footer className="bg-[#F5E6C8] border-t-2 border-[#E8D5B5] text-[#70412E] pt-14 pb-10">
+    <footer className="bg-[#F5E7B8] border-t-2 border-[#EAD29C] text-[#C7320B] pt-14 pb-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 pb-12 border-b border-[#E8D5B5]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 pb-12 border-b border-[#EAD29C]">
           
           {/* Brand Info & Tagline */}
           <div className="md:col-span-5 space-y-4">
             <Logo size="md" variant="horizontal" />
             
-            <p className="text-xs sm:text-sm text-[#806B58] max-w-sm leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#6E2C1B] max-w-sm leading-relaxed">
               Usaha kuliner mahasiswa yang menyajikan camilan makaroni gurih renyah dan minuman es teh segar berkualitas dengan harga bersahabat.
             </p>
 
@@ -64,7 +65,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
                 href={`https://wa.me/${storeConfig.whatsappNumber.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-[#FFFAF1] border border-[#E8D5B5] text-[#70412E] hover:bg-[#70412E] hover:text-white flex items-center justify-center transition-colors shadow-2xs"
+                className="w-9 h-9 rounded-xl bg-[#FCF6E0] border border-[#EAD29C] text-[#C7320B] hover:bg-[#C7320B] hover:text-white flex items-center justify-center transition-colors shadow-2xs"
                 aria-label="WhatsApp SERUPUT & KUNYAH"
               >
                 <MessageCircle className="w-4 h-4" />
@@ -74,7 +75,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
                 href={storeConfig.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-[#FFFAF1] border border-[#E8D5B5] text-[#70412E] hover:bg-[#70412E] hover:text-white flex items-center justify-center transition-colors shadow-2xs"
+                className="w-9 h-9 rounded-xl bg-[#FCF6E0] border border-[#EAD29C] text-[#C7320B] hover:bg-[#C7320B] hover:text-white flex items-center justify-center transition-colors shadow-2xs"
                 aria-label="Instagram SERUPUT & KUNYAH"
               >
                 <Instagram className="w-4 h-4" />
@@ -84,7 +85,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
 
           {/* Quick Navigation Links */}
           <div className="md:col-span-4 space-y-3">
-            <h4 className="font-heading font-black text-sm uppercase tracking-wider text-[#70412E]">
+            <h4 className="font-heading font-black text-sm uppercase tracking-wider text-[#C7320B]">
               Navigasi Halaman
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
@@ -92,7 +93,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-[#806B58] hover:text-[#70412E] transition-colors"
+                    className="text-[#6E2C1B] hover:text-[#C7320B] transition-colors"
                   >
                     {link.label}
                   </a>
@@ -103,17 +104,17 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
 
           {/* Notes & Student Entrepreneurship project badge */}
           <div className="md:col-span-3 space-y-3">
-            <h4 className="font-heading font-black text-sm uppercase tracking-wider text-[#70412E]">
+            <h4 className="font-heading font-black text-sm uppercase tracking-wider text-[#C7320B]">
               Kewirausahaan Mahasiswa
             </h4>
-            <p className="text-xs text-[#806B58] leading-relaxed">
+            <p className="text-xs text-[#6E2C1B] leading-relaxed">
               Proyek rintisan kuliner digital kampus. Pengolahan home-based dengan standar kebersihan terjaga.
             </p>
             <div className="pt-2">
               <button
                 onClick={scrollToTop}
                 type="button"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#70412E] hover:text-[#C58B55] transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#C7320B] hover:text-[#FF8234] transition-colors"
               >
                 <ArrowUp className="w-3.5 h-3.5" />
                 <span>Kembali ke Atas</span>
@@ -124,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
         </div>
 
         {/* Copyright */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#806B58] gap-3 border-t border-[#E8D5B5]/60 mt-2">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#6E2C1B] gap-3 border-t border-[#EAD29C]/60 mt-2">
           <p
             onClick={handleCopyrightClick}
             className="cursor-default select-none transition-colors"
@@ -135,7 +136,7 @@ export const Footer: React.FC<FooterProps> = ({ storeConfig, onTriggerSecretDev 
 
           <p className="flex items-center gap-1 select-none">
             <span>Dibuat dengan</span>
-            <Heart className="w-3.5 h-3.5 text-[#C58B55] fill-[#C58B55]" />
+            <Heart className="w-3.5 h-3.5 text-[#FF8234] fill-[#FF8234]" />
             <span>untuk Tugas Matkul Kewirausahaan</span>
           </p>
         </div>

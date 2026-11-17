@@ -40,6 +40,9 @@ export interface StoreConfig {
   instagramHandle: string; // e.g. "@seruputkunyah"
   instagramUrl: string;
   campusArea: string; // e.g. "Area Kampus & Sekitarnya"
+  storeAddress: string; // e.g. "Jl. Mujair 1 No. 22, Pasar Minggu"
+  gmapsQuery: string; // search query or "lat, lng" for Google Maps pin
+  gmapsUrl?: string; // optional direct Google Maps share URL
   operationalHours: string; // e.g. "Senin – Sabtu, 10.00 – 20.00 WIB"
   brandTagline: string;
 }

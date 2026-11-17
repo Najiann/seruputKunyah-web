@@ -209,10 +209,10 @@ export function getWhatsAppOrderUrl(phoneNumber, items, customerNote = '', custo
 
     productCard: `<!-- src/components/ProductCard.vue -->
 <template>
-  <article class="bg-[#FFFAF1] rounded-2xl border border-[#E8D5B5] overflow-hidden flex flex-col h-full shadow-xs hover:shadow-md transition-all">
-    <div class="relative aspect-4/3 overflow-hidden bg-[#F5E6C8]/50">
+  <article class="bg-[#FCF6E0] rounded-2xl border border-[#EAD29C] overflow-hidden flex flex-col h-full shadow-xs hover:shadow-md transition-all">
+    <div class="relative aspect-4/3 overflow-hidden bg-[#F5E7B8]/50">
       <img :src="product.image" :alt="product.name" class="w-full h-full object-cover" />
-      <span class="absolute top-3 left-3 bg-[#FFFAF1]/90 text-xs font-bold px-2 py-1 rounded">
+      <span class="absolute top-3 left-3 bg-[#FCF6E0]/90 text-xs font-bold px-2 py-1 rounded">
         {{ product.categoryLabel }}
       </span>
     </div>
@@ -220,20 +220,20 @@ export function getWhatsAppOrderUrl(phoneNumber, items, customerNote = '', custo
     <div class="p-5 flex flex-col flex-1 justify-between">
       <div>
         <div class="flex justify-between items-baseline mb-2">
-          <h3 class="font-bold text-lg text-[#70412E]">{{ product.name }}</h3>
-          <span class="font-bold text-[#70412E]">{{ formatRupiah(product.price) }}</span>
+          <h3 class="font-bold text-lg text-[#C7320B]">{{ product.name }}</h3>
+          <span class="font-bold text-[#C7320B]">{{ formatRupiah(product.price) }}</span>
         </div>
-        <p class="text-xs text-[#806B58] line-clamp-2">{{ product.description }}</p>
+        <p class="text-xs text-[#6E2C1B] line-clamp-2">{{ product.description }}</p>
 
         <!-- Variant Picker -->
         <div v-if="product.spicyOptions" class="mt-3">
-          <select v-model="selectedVariant" class="w-full text-xs p-1.5 border rounded-lg bg-[#F5E6C8]/30">
+          <select v-model="selectedVariant" class="w-full text-xs p-1.5 border rounded-lg bg-[#F5E7B8]/30">
             <option v-for="opt in product.spicyOptions" :key="opt" :value="opt">{{ opt }}</option>
           </select>
         </div>
       </div>
 
-      <button @click="handleAdd" class="mt-4 w-full py-2 bg-[#70412E] text-white font-bold text-xs rounded-xl">
+      <button @click="handleAdd" class="mt-4 w-full py-2 bg-[#C7320B] text-white font-bold text-xs rounded-xl">
         {{ added ? '✓ Berhasil Ditambahkan' : '+ Tambah ke Keranjang' }}
       </button>
     </div>
@@ -263,18 +263,18 @@ const handleAdd = () => {
     cartDrawer: `<!-- src/components/CartDrawer.vue -->
 <template>
   <div v-if="isCartOpen" class="fixed inset-0 z-50">
-    <div @click="closeCart" class="fixed inset-0 bg-[#70412E]/40 backdrop-blur-xs"></div>
-    <aside class="fixed inset-y-0 right-0 max-w-md w-full bg-[#FFFAF1] shadow-2xl flex flex-col p-6 z-10">
+    <div @click="closeCart" class="fixed inset-0 bg-[#C7320B]/40 backdrop-blur-xs"></div>
+    <aside class="fixed inset-y-0 right-0 max-w-md w-full bg-[#FCF6E0] shadow-2xl flex flex-col p-6 z-10">
       <div class="flex justify-between items-center pb-4 border-b">
-        <h2 class="font-bold text-xl text-[#70412E]">Keranjang Pesanan ({{ totalItems }})</h2>
+        <h2 class="font-bold text-xl text-[#C7320B]">Keranjang Pesanan ({{ totalItems }})</h2>
         <button @click="closeCart" class="text-sm font-bold">✕ Tutup</button>
       </div>
 
       <div class="flex-1 overflow-y-auto py-4 space-y-3">
         <div v-for="item in items" :key="item.product.id" class="p-3 bg-white rounded-xl border flex justify-between">
           <div>
-            <h4 class="font-bold text-sm text-[#70412E]">{{ item.product.name }}</h4>
-            <p class="text-xs text-[#806B58]">{{ formatRupiah(item.product.price) }} x {{ item.quantity }}</p>
+            <h4 class="font-bold text-sm text-[#C7320B]">{{ item.product.name }}</h4>
+            <p class="text-xs text-[#6E2C1B]">{{ formatRupiah(item.product.price) }} x {{ item.quantity }}</p>
           </div>
           <div class="flex items-center gap-2">
             <button @click="updateQuantity(item.product.id, -1)" class="px-2 py-0.5 border rounded">-</button>
@@ -285,11 +285,11 @@ const handleAdd = () => {
       </div>
 
       <div class="pt-4 border-t space-y-3">
-        <div class="flex justify-between font-bold text-lg text-[#70412E]">
+        <div class="flex justify-between font-bold text-lg text-[#C7320B]">
           <span>Total:</span>
           <span>{{ formatRupiah(totalPrice) }}</span>
         </div>
-        <button @click="handleCheckout" class="w-full py-3 bg-[#70412E] text-white font-bold rounded-xl">
+        <button @click="handleCheckout" class="w-full py-3 bg-[#C7320B] text-white font-bold rounded-xl">
           Checkout WhatsApp
         </button>
       </div>
@@ -313,65 +313,65 @@ const handleCheckout = () => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" role="dialog" aria-modal="true">
-      <div onClick={onClose} className="fixed inset-0 bg-[#70412E]/60 backdrop-blur-xs transition-opacity" />
+      <div onClick={onClose} className="fixed inset-0 bg-[#C7320B]/60 backdrop-blur-xs transition-opacity" />
 
       <div className="min-h-full flex items-center justify-center p-3 sm:p-6">
-        <div className="relative bg-[#FFFAF1] border-2 border-[#E8D5B5] rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl">
+        <div className="relative bg-[#FCF6E0] border-2 border-[#EAD29C] rounded-3xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl">
           
           {/* Header */}
-          <div className="flex items-start justify-between pb-4 border-b border-[#E8D5B5]">
+          <div className="flex items-start justify-between pb-4 border-b border-[#EAD29C]">
             <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#78804B]/15 text-[#78804B] text-xs font-black rounded-full uppercase">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FF8234]/20 text-[#C7320B] text-xs font-black rounded-full uppercase">
                 <Code2 className="w-3.5 h-3.5" />
                 <span>Portofolio &amp; Arsitektur Vue.js 3</span>
               </div>
-              <h3 className="font-heading text-2xl font-black text-[#70412E]">
+              <h3 className="font-heading text-2xl font-black text-[#C7320B]">
                 Panduan Migrasi &amp; Implementasi Vue.js 3
               </h3>
-              <p className="text-xs text-[#806B58]">
+              <p className="text-xs text-[#6E2C1B]">
                 Sesuai ketentuan Bagian 8: Informasi arsitektur, perbedaan lingkungan, dan source code Vue 3 Composition API siap pakai untuk tugas kuliah &amp; portofolio Anda.
               </p>
             </div>
-            <button onClick={onClose} type="button" className="p-2 text-[#806B58] hover:text-[#70412E] rounded-full hover:bg-[#F5E6C8]">
+            <button onClick={onClose} type="button" className="p-2 text-[#6E2C1B] hover:text-[#C7320B] rounded-full hover:bg-[#F5E7B8]">
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex flex-wrap gap-1.5 pt-4 pb-3 border-b border-[#E8D5B5]/60 text-xs font-bold">
+          <div className="flex flex-wrap gap-1.5 pt-4 pb-3 border-b border-[#EAD29C]/60 text-xs font-bold">
             <button
               onClick={() => setActiveTab('overview')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'overview' ? 'bg-[#70412E] text-white' : 'text-[#70412E] hover:bg-[#F5E6C8]'}`}
+              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'overview' ? 'bg-[#C7320B] text-white' : 'text-[#C7320B] hover:bg-[#F5E7B8]'}`}
             >
               Penjelasan Arsitektur
             </button>
             <button
               onClick={() => setActiveTab('useCart')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'useCart' ? 'bg-[#70412E] text-white' : 'text-[#70412E] hover:bg-[#F5E6C8]'}`}
+              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'useCart' ? 'bg-[#C7320B] text-white' : 'text-[#C7320B] hover:bg-[#F5E7B8]'}`}
             >
               src/composables/useCart.js
             </button>
             <button
               onClick={() => setActiveTab('products')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'products' ? 'bg-[#70412E] text-white' : 'text-[#70412E] hover:bg-[#F5E6C8]'}`}
+              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'products' ? 'bg-[#C7320B] text-white' : 'text-[#C7320B] hover:bg-[#F5E7B8]'}`}
             >
               src/data/products.js
             </button>
             <button
               onClick={() => setActiveTab('whatsapp')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'whatsapp' ? 'bg-[#70412E] text-white' : 'text-[#70412E] hover:bg-[#F5E6C8]'}`}
+              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'whatsapp' ? 'bg-[#C7320B] text-white' : 'text-[#C7320B] hover:bg-[#F5E7B8]'}`}
             >
               src/utils/whatsapp.js
             </button>
             <button
               onClick={() => setActiveTab('productCard')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'productCard' ? 'bg-[#70412E] text-white' : 'text-[#70412E] hover:bg-[#F5E6C8]'}`}
+              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'productCard' ? 'bg-[#C7320B] text-white' : 'text-[#C7320B] hover:bg-[#F5E7B8]'}`}
             >
               ProductCard.vue
             </button>
             <button
               onClick={() => setActiveTab('cartDrawer')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'cartDrawer' ? 'bg-[#70412E] text-white' : 'text-[#70412E] hover:bg-[#F5E6C8]'}`}
+              className={`px-3 py-1.5 rounded-lg transition-colors ${activeTab === 'cartDrawer' ? 'bg-[#C7320B] text-white' : 'text-[#C7320B] hover:bg-[#F5E7B8]'}`}
             >
               CartDrawer.vue
             </button>
@@ -380,30 +380,30 @@ const handleCheckout = () => {
           {/* Tab Content */}
           <div className="py-4 max-h-[60vh] overflow-y-auto">
             {activeTab === 'overview' ? (
-              <div className="space-y-4 text-xs sm:text-sm text-[#70412E]">
-                <div className="p-4 bg-[#F5E6C8]/50 rounded-2xl border border-[#E8D5B5] space-y-2">
-                  <h4 className="font-heading font-black text-base text-[#70412E] flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-[#C58B55]" />
+              <div className="space-y-4 text-xs sm:text-sm text-[#C7320B]">
+                <div className="p-4 bg-[#F5E7B8]/50 rounded-2xl border border-[#EAD29C] space-y-2">
+                  <h4 className="font-heading font-black text-base text-[#C7320B] flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-[#FF8234]" />
                     <span>Laporan Kejujuran Teknologi &amp; Keselarasan Master Prompt</span>
                   </h4>
-                  <p className="text-xs text-[#806B58] leading-relaxed">
+                  <p className="text-xs text-[#6E2C1B] leading-relaxed">
                     Di lingkungan Google AI Studio Build ini, dev server terkonfigurasi dengan React 19 + TypeScript + Vite. 
                     Sesuai instruksi master prompt di <strong>Bagian 8</strong>:
                   </p>
-                  <blockquote className="p-2.5 bg-white/70 border-l-3 border-[#70412E] text-xs italic text-[#70412E] rounded">
+                  <blockquote className="p-2.5 bg-white/70 border-l-3 border-[#C7320B] text-xs italic text-[#C7320B] rounded">
                     &ldquo;Jika lingkungan AI Studio yang digunakan menghasilkan prototipe React atau HTML alih-alih proyek Vue, prioritaskan desain dan perilaku prototipe terlebih dahulu. Setelah itu, jelaskan perbedaan implementasi dan sediakan panduan migrasi ke Vue.js 3. Jangan mengklaim hasil sudah berbasis Vue apabila implementasinya belum benar-benar menggunakan Vue.&rdquo;
                   </blockquote>
-                  <p className="text-xs text-[#806B58] leading-relaxed">
+                  <p className="text-xs text-[#6E2C1B] leading-relaxed">
                     Oleh karena itu, prototipe interaktif yang Anda gunakan saat ini berjalan penuh dengan seluruh fitur (katalog, keranjang interaktif, perhitungan otomatis, WhatsApp checkout, dan responsive design). Kode ekuivalen <strong>Vue.js 3 Composition API</strong> telah kami sediakan lengkap di tab-tab samping agar Anda dapat langsung mengekspor dan menunjukkannya di laporan tugas kewirausahaan/portofolio Vue.js Anda!
                   </p>
                 </div>
 
-                <div className="p-4 bg-white rounded-2xl border border-[#E8D5B5] space-y-3">
-                  <h4 className="font-heading font-black text-sm text-[#70412E] flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-[#78804B]" />
+                <div className="p-4 bg-white rounded-2xl border border-[#EAD29C] space-y-3">
+                  <h4 className="font-heading font-black text-sm text-[#C7320B] flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-[#FF8234]" />
                     <span>Langkah Mudah Membuka Proyek ini dalam Vue.js 3 Mandiri:</span>
                   </h4>
-                  <ol className="list-decimal list-inside space-y-1.5 text-xs text-[#806B58] font-mono">
+                  <ol className="list-decimal list-inside space-y-1.5 text-xs text-[#6E2C1B] font-mono">
                     <li>npm create vite@latest seruput-kunyah -- --template vue</li>
                     <li>cd seruput-kunyah && npm install</li>
                     <li>npm install lucide-vue-next</li>
@@ -415,7 +415,7 @@ const handleCheckout = () => {
             ) : (
               <div className="relative">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-mono text-[#806B58]">
+                  <span className="text-xs font-mono text-[#6E2C1B]">
                     {activeTab === 'useCart' && 'src/composables/useCart.js'}
                     {activeTab === 'products' && 'src/data/products.js'}
                     {activeTab === 'whatsapp' && 'src/utils/whatsapp.js'}
@@ -424,7 +424,7 @@ const handleCheckout = () => {
                   </span>
                   <button
                     onClick={() => copyCode(codeSnippets[activeTab], activeTab)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#F5E6C8] hover:bg-[#ebd3a8] text-[#70412E] text-xs font-bold rounded-lg border border-[#E8D5B5] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#F5E7B8] hover:bg-[#EFE0B0] text-[#C7320B] text-xs font-bold rounded-lg border border-[#EAD29C] transition-colors"
                   >
                     {copied === activeTab ? (
                       <>
@@ -439,7 +439,7 @@ const handleCheckout = () => {
                     )}
                   </button>
                 </div>
-                <pre className="p-4 bg-[#70412E] text-[#FFFAF1] rounded-2xl overflow-x-auto text-xs font-mono max-h-[45vh] leading-relaxed">
+                <pre className="p-4 bg-[#C7320B] text-[#FCF6E0] rounded-2xl overflow-x-auto text-xs font-mono max-h-[45vh] leading-relaxed">
                   {codeSnippets[activeTab]}
                 </pre>
               </div>
@@ -447,11 +447,11 @@ const handleCheckout = () => {
           </div>
 
           {/* Footer */}
-          <div className="pt-4 border-t border-[#E8D5B5] flex justify-end">
+          <div className="pt-4 border-t border-[#EAD29C] flex justify-end">
             <button
               onClick={onClose}
               type="button"
-              className="px-5 py-2 text-xs font-bold text-white bg-[#70412E] hover:bg-[#583020] rounded-xl shadow-xs"
+              className="px-5 py-2 text-xs font-bold text-white bg-[#C7320B] hover:bg-[#A12606] rounded-xl shadow-xs"
             >
               Tutup Panduan
             </button>

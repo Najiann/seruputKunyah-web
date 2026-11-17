@@ -27,7 +27,17 @@ function MainLayout() {
   const [storeConfig, setStoreConfig] = useState<StoreConfig>(getStoreConfig());
   const [reviews, setReviews] = useState<CustomerReview[]>(getCustomerReviews());
   const [isDevAdminOpen, setIsDevAdminOpen] = useState(false);
+  const [isGmpQuotaExceeded, setIsGmpQuotaExceeded] = useState(false);
   const { openCart } = useCart();
+
+  // Listen for Google Maps Platform quota limit events (Tier 1 & Tier 2)
+  useEffect(() => {
+    const handleQuotaExceeded = () => {
+      setIsGmpQuotaExceeded(true);
+    };
+    window.addEventListener('gmp-quota-exceeded', handleQuotaExceeded);
+    return () => window.removeEventListener('gmp-quota-exceeded', handleQuotaExceeded);
+  }, []);
 
   // Keyboard shortcut Shift + A to open secret Developer & Admin Panel
   useEffect(() => {
@@ -69,7 +79,24 @@ function MainLayout() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FFFAF1] text-[#70412E]">
+    <div className="min-h-screen flex flex-col bg-[#FCF6E0] text-[#C7320B]">
+      {isGmpQuotaExceeded && (
+        <div className="bg-amber-50 border-b border-amber-200 text-amber-900 px-4 py-2.5 text-xs md:text-sm text-center sticky top-0 z-50 shadow-sm">
+          <span>
+            Google Maps Platform quota reached. If you are the app owner, visit{' '}
+            <a
+              href="https://developers.google.com/maps/ai/ai-studio?utm_campaign=gmp_mcp_codeassist_v1_aistudio#quota_exceeded_errors"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline font-semibold text-amber-950 hover:text-amber-800"
+            >
+              maps developer site
+            </a>{' '}
+            for instructions to update your account.
+          </span>
+        </div>
+      )}
+
       {/* Top Navbar */}
       <Navbar />
 

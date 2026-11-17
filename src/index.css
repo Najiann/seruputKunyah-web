@@ -2,13 +2,14 @@
 
 @layer base {
   :root {
-    --color-cream: #F5E6C8;
-    --color-dark-brown: #70412E;
-    --color-caramel: #C58B55;
-    --color-olive: #78804B;
-    --color-soft-white: #FFFAF1;
-    --color-muted-brown: #806B58;
-    --color-warm-border: #E8D5B5;
+    --color-primary: #FCF6E0;
+    --color-brand: #C7320B;
+    --color-brand-hover: #A12606;
+    --color-accent: #FF8234;
+    --color-cream-soft: #F5E7B8;
+    --color-card-surface: #FFFDF5;
+    --color-muted-text: #6E2C1B;
+    --color-warm-border: #EAD29C;
   }
 
   html {
@@ -27,12 +28,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F5E6C8;
+  background: #FCF6E0;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C58B55;
+  background: #FF8234;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #70412E;
+  background: #C7320B;
 }

@@ -7,7 +7,10 @@ export const DEFAULT_STORE_CONFIG: StoreConfig = {
   whatsappDisplay: '+62 851-8060-4131',
   instagramHandle: '@seruputkunyah',
   instagramUrl: 'https://www.instagram.com/seruputkunyah',
-  campusArea: 'Area Sekitar Kampus & Kos Mahasiswa (COD / Antar)',
+  campusArea: 'Pasar Minggu, Jakarta Selatan & Area Kampus (COD / Antar)',
+  storeAddress: 'Jl. Mujair 1 No. 22, Pasar Minggu',
+  gmapsQuery: 'Jl. Mujair 1 No. 22, Pasar Minggu',
+  gmapsUrl: '',
   operationalHours: 'Senin – Sabtu, 10.00 – 19.30 WIB',
   brandTagline: 'Seruput Segar, Kunyah Lezat',
 };
