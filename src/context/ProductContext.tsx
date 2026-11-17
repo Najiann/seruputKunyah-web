@@ -8,6 +8,7 @@ import {
   calculateBundles,
   getAllMenuNames,
 } from '../services/productService';
+import { fetchPublicProductsIfSupabase } from '../services/adminBackendService';
 
 interface ProductContextType {
   products: Product[];
@@ -26,14 +27,31 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(() => getStoredProducts());
 
-  // Listen to cross-component or window events if updated from other places
+  // Listen to cross-component or Supabase remote active catalog updates
   useEffect(() => {
+    let active = true;
+
+    const loadRemoteIfConfigured = async () => {
+      try {
+        const remote = await fetchPublicProductsIfSupabase();
+        if (active && remote !== null) {
+          setProducts(remote);
+        }
+      } catch {
+        // Fallback smoothly to stored products
+      }
+    };
+
+    void loadRemoteIfConfigured();
+
     const handleSync = () => {
       setProducts(getStoredProducts());
+      void loadRemoteIfConfigured();
     };
     window.addEventListener('seruput-products-changed', handleSync);
     window.addEventListener('storage', handleSync);
     return () => {
+      active = false;
       window.removeEventListener('seruput-products-changed', handleSync);
       window.removeEventListener('storage', handleSync);
     };

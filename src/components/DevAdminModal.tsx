@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Code2, Settings2, ShieldCheck, Terminal, Tag } from 'lucide-react';
+import { X, Code2, Settings2, ShieldCheck, Terminal, Tag, LayoutDashboard } from 'lucide-react';
 import { StoreConfig } from '../types';
 import { StoreConfigModal } from './StoreConfigModal';
 import { VuePortfolioModal } from './VuePortfolioModal';
@@ -10,6 +10,7 @@ interface DevAdminModalProps {
   onClose: () => void;
   currentConfig: StoreConfig;
   onSaveConfig: (newConfig: StoreConfig) => void;
+  onOpenAdminPortal?: () => void;
 }
 
 export const DevAdminModal: React.FC<DevAdminModalProps> = ({
@@ -17,6 +18,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
   onClose,
   currentConfig,
   onSaveConfig,
+  onOpenAdminPortal,
 }) => {
   const [activeModal, setActiveModal] = useState<'none' | 'vue' | 'config' | 'price'>('none');
 
@@ -64,6 +66,29 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
 
             {/* Action Cards */}
             <div className="space-y-3">
+              {onOpenAdminPortal && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenAdminPortal();
+                  }}
+                  className="w-full text-left p-4 rounded-2xl bg-[#C7320B] text-white border border-[#C7320B] hover:bg-[#A12606] hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group cursor-pointer"
+                >
+                  <div className="p-2.5 rounded-xl bg-white/15 text-white shrink-0 mt-0.5">
+                    <LayoutDashboard className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-heading font-black text-sm text-white">
+                      Buka Dashboard Admin &amp; POS (/admin)
+                    </h4>
+                    <p className="text-[11px] text-[#FCF6E0]/90 mt-0.5">
+                      Login kasir/admin untuk POS, kelola produk &amp; stok, riwayat transaksi, dan laporan penjualan.
+                    </p>
+                  </div>
+                </button>
+              )}
+
               {/* Option 1: Vue.js 3 Code & Portfolio */}
               <button
                 type="button"

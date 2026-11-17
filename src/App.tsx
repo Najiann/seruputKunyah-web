@@ -19,10 +19,11 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { FloatingControls } from './components/FloatingControls';
 import { DevAdminModal } from './components/DevAdminModal';
+import { AdminPortal } from './components/admin/AdminPortal';
 import { getCustomerReviews } from './data/reviews';
 import { CustomerReview } from './types';
 
-function MainLayout() {
+function MainLayout({ onOpenAdminPortal }: { onOpenAdminPortal: () => void }) {
   const [storeConfig, setStoreConfig] = useState<StoreConfig>(getStoreConfig());
   const [reviews, setReviews] = useState<CustomerReview[]>(getCustomerReviews());
   const [isDevAdminOpen, setIsDevAdminOpen] = useState(false);
@@ -145,16 +146,51 @@ function MainLayout() {
         onClose={() => setIsDevAdminOpen(false)}
         currentConfig={storeConfig}
         onSaveConfig={updated => setStoreConfig(updated)}
+        onOpenAdminPortal={onOpenAdminPortal}
       />
     </div>
   );
 }
 
 export default function App() {
+  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.location.pathname.startsWith('/admin');
+  });
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setIsAdminRoute(window.location.pathname.startsWith('/admin'));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateToAdmin = () => {
+    if (!window.location.pathname.startsWith('/admin')) {
+      window.history.pushState({}, '', '/admin');
+    }
+    setIsAdminRoute(true);
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
+  const navigateToStore = () => {
+    if (window.location.pathname.startsWith('/admin')) {
+      window.history.pushState({}, '', '/');
+    }
+    setIsAdminRoute(false);
+    window.dispatchEvent(new Event('seruput-products-changed'));
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
   return (
     <ProductProvider>
       <CartProvider>
-        <MainLayout />
+        {isAdminRoute ? (
+          <AdminPortal onBackToStore={navigateToStore} />
+        ) : (
+          <MainLayout onOpenAdminPortal={navigateToAdmin} />
+        )}
       </CartProvider>
     </ProductProvider>
   );
